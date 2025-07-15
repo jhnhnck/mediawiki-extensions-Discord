@@ -1,14 +1,15 @@
 {
 	"name": "Discord",
 	"author": [
-		"[https://github.com/jayktaylor Jayden Bailey]"
+		"[https://github.com/jayktaylor Jayden Bailey]",
+		"[https://github.com/jhnhnck John Hancock]"
 	],
-	"url": "https://github.com/jayktaylor/mw-discord",
-	"version": "1.0.13",
+	"url": "https://github.com/jhnhnck/mediawiki-extensions-Discord",
+	"version": "1.1.0",
 	"descriptionmsg": "discord-desc",
 	"license-name": "MIT",
 	"requires": {
-		"MediaWiki": ">= 1.39.0"
+		"MediaWiki": ">= 1.44.0"
 	},
 	"manifest_version": 1,
 	"config": {
