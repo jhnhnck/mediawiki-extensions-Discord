@@ -21,38 +21,38 @@ class DiscordHooks {
 	 * Called when a page is created or edited
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageSaveComplete
 	 */
-	public static function onPageSaveComplete( WikiPage $wikiPage, UserIdentity $userIdentity, string $summary, int $flags, RevisionRecord $revision, EditResult $editResult ) {
+	public static function onPageSaveComplete(WikiPage $wikiPage, UserIdentity $userIdentity, string $summary, int $flags, RevisionRecord $revision, EditResult $editResult) {
 		global $wgDiscordNoBots, $wgDiscordNoMinor, $wgDiscordNoNull;
 		$hookName = 'PageSaveComplete';
-        $user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity( $userIdentity );
+		$user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity($userIdentity);
 
-		if ( DiscordUtils::isDisabled( $hookName, $wikiPage->getTitle()->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $wikiPage->getTitle()->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot edit
 			return true;
 		}
 
-		if ( $wgDiscordNoMinor && $revision->isMinor() ) {
+		if ($wgDiscordNoMinor && $revision->isMinor()) {
 			// Don't continue, this is a minor edit
 			return true;
 		}
 
-		if ( $wgDiscordNoNull && $editResult->isNullEdit() ) {
+		if ($wgDiscordNoNull && $editResult->isNullEdit()) {
 			// Don't continue, this is a null edit
 			return true;
 		}
 
 		$isNew = $editResult->isNew();
-		if ( $wikiPage->getTitle()->inNamespace( NS_FILE ) && $isNew ) {
+		if ($wikiPage->getTitle()->inNamespace(NS_FILE) && $isNew) {
 			// Don't continue, it's a new file which onUploadComplete will handle instead
 			return true;
 		}
 
 		$msgKey = 'discord-edit';
-		if ( $isNew ) { // is a new page
+		if ($isNew) { // is a new page
 			$msgKey = 'discord-create';
 		}
 
@@ -71,18 +71,18 @@ class DiscordHooks {
 	 * Called when a page is deleted
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageDeleteComplete
 	 */
-	public static function onPageDeleteComplete( MediaWiki\Page\ProperPageIdentity $page, MediaWiki\Permissions\Authority $deleter, string $reason, int $pageID, MediaWiki\Revision\RevisionRecord $deletedRev, ManualLogEntry $logEntry, int $archivedRevisionCount ) {
+	public static function onPageDeleteComplete(MediaWiki\Page\ProperPageIdentity $page, MediaWiki\Permissions\Authority $deleter, string $reason, int $pageID, MediaWiki\Revision\RevisionRecord $deletedRev, ManualLogEntry $logEntry, int $archivedRevisionCount) {
 		global $wgDiscordNoBots;
 		$hookName = 'PageDeleteComplete';
 
 		$user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity($deleter->getUser());
 		$page = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle($page);
 
-		if ( DiscordUtils::isDisabled( $hookName, $page->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $page->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot change
 			return true;
 		}
@@ -102,17 +102,17 @@ class DiscordHooks {
 	 * Called when a page's revisions are restored
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ArticleUndelete
 	 */
-	public static function onArticleUndelete( Title $title, $create, $comment, $oldPageId, $restoredPages ) {
+	public static function onArticleUndelete(Title $title, $create, $comment, $oldPageId, $restoredPages) {
 		global $wgDiscordNoBots;
 		$hookName = 'ArticleUndelete';
 
 		$user = RequestContext::getMain()->getUser();
 
-		if ( DiscordUtils::isDisabled( $hookName, $title->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $title->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot change
 			return true;
 		}
@@ -132,24 +132,27 @@ class DiscordHooks {
 	 * Called after committing revision visibility changes to the database
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ArticleRevisionVisibilitySet
 	 */
-	public static function onArticleRevisionVisibilitySet( &$title, $ids, $visibilityChangeMap ) {
+	public static function onArticleRevisionVisibilitySet(&$title, $ids, $visibilityChangeMap) {
 		global $wgDiscordNoBots;
 		$hookName = 'ArticleRevisionVisibilitySet';
 
 		$user = RequestContext::getMain()->getUser();
 
-		if ( DiscordUtils::isDisabled( $hookName, $title->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $title->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot change
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-revvisibility', DiscordUtils::createUserLinks( $user ),
+		$msg = wfMessage(
+			'discord-revvisibility',
+			DiscordUtils::createUserLinks($user),
 			count($visibilityChangeMap),
-			DiscordUtils::createMarkdownLink( $title, $title->getFullURL( '', false, PROTO_CANONICAL ) ) )->inContentLanguage()->plain();
+			DiscordUtils::createMarkdownLink($title, $title->getFullURL('', false, PROTO_CANONICAL))
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -158,15 +161,15 @@ class DiscordHooks {
 	 * Called when a page is protected (or unprotected)
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ArticleProtectComplete
 	 */
-	public static function onArticleProtectComplete( &$article, &$user, $protect, $reason ) {
+	public static function onArticleProtectComplete(&$article, &$user, $protect, $reason) {
 		global $wgDiscordNoBots;
 		$hookName = 'ArticleProtectComplete';
 
-		if ( DiscordUtils::isDisabled( $hookName, $article->getTitle()->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $article->getTitle()->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot change
 			return true;
 		}
@@ -186,16 +189,16 @@ class DiscordHooks {
 	 * Called when a page is moved
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageMoveComplete
 	 */
-	public static function onPageMoveComplete( LinkTarget $old, LinkTarget $new, UserIdentity $userIdentity, int $pageid, int $redirid, string $reason, RevisionRecord $revision ) {
+	public static function onPageMoveComplete(LinkTarget $old, LinkTarget $new, UserIdentity $userIdentity, int $pageid, int $redirid, string $reason, RevisionRecord $revision) {
 		global $wgDiscordNoBots;
 		$hookName = 'TitleMoveComplete';
-        $user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity( $userIdentity );
+		$user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity($userIdentity);
 
-		if ( DiscordUtils::isDisabled( $hookName, $old->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $old->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot change
 			return true;
 		}
@@ -216,14 +219,14 @@ class DiscordHooks {
 	 * Called when a user is created
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/LocalUserCreated
 	 */
-	public static function onLocalUserCreated( $user, $autocreated ) {
+	public static function onLocalUserCreated($user, $autocreated) {
 		$hookName = 'LocalUserCreated';
 
-		if ( DiscordUtils::isDisabled( $hookName, NULL, $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, NULL, $user)) {
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-localusercreated', DiscordUtils::createUserLinks( $user ) )->inContentLanguage()->plain();
+		$msg = wfMessage('discord-localusercreated', DiscordUtils::createUserLinks($user))->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -232,22 +235,22 @@ class DiscordHooks {
 	 * Called when a user is blocked
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/BlockIpComplete
 	 */
-	public static function onBlockIpComplete( DatabaseBlock $block, User $user ) {
+	public static function onBlockIpComplete(DatabaseBlock $block, User $user) {
 		$hookName = 'BlockIpComplete';
 
-		if ( DiscordUtils::isDisabled( $hookName, NULL, $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, NULL, $user)) {
 			return true;
 		}
 
 		$expiry = $block->getExpiry();
 		if ($expires = strtotime($expiry)) {
-			$expiryMsg = sprintf('%s', date( wfMessage( 'discord-blocktimeformat' )->inContentLanguage()->text(), $expires));
+			$expiryMsg = sprintf('%s', date(wfMessage('discord-blocktimeformat')->inContentLanguage()->text(), $expires));
 		} else {
 			$expiryMsg = $expiry;
 		}
 
 		$target = $block->getTargetUserIdentity();
-		if ( $target === null ) {
+		if ($target === null) {
 			$target = $block->getTargetName();
 		}
 
@@ -266,19 +269,19 @@ class DiscordHooks {
 	 * Called when a user is unblocked
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/UnblockUserComplete
 	 */
-	public static function onUnblockUserComplete( DatabaseBlock $block, User $user ) {
+	public static function onUnblockUserComplete(DatabaseBlock $block, User $user) {
 		$hookName = 'UnblockUserComplete';
 
-		if ( DiscordUtils::isDisabled( $hookName, NULL, $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, NULL, $user)) {
 			return true;
 		}
 
 		$target = $block->getTargetUserIdentity();
-		if ( $target === null ) {
+		if ($target === null) {
 			$target = $block->getTargetName();
 		}
 
-		$msg = wfMessage( 'discord-unblockusercomplete', DiscordUtils::createUserLinks( $user ), DiscordUtils::createUserLinks( $target ) )->inContentLanguage()->text();
+		$msg = wfMessage('discord-unblockusercomplete', DiscordUtils::createUserLinks($user), DiscordUtils::createUserLinks($target))->inContentLanguage()->text();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -287,10 +290,10 @@ class DiscordHooks {
 	 * Called when a user's rights are changed
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/UserGroupsChanged
 	 */
-	public static function onUserGroupsChanged( User $user, array $added, array $removed, $performer, $reason ) {
+	public static function onUserGroupsChanged(User $user, array $added, array $removed, $performer, $reason) {
 		$hookName = 'UserGroupsChanged';
 
-		if ( DiscordUtils::isDisabled( $hookName, NULL, $performer ) ) {
+		if (DiscordUtils::isDisabled($hookName, NULL, $performer)) {
 			return true;
 		}
 
@@ -315,18 +318,18 @@ class DiscordHooks {
 	 * Called when a file upload is complete
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/UploadComplete
 	 */
-	public static function onUploadComplete( &$image ) {
+	public static function onUploadComplete(&$image) {
 		global $wgDiscordNoBots;
 		$hookName = 'UploadComplete';
 
 		$lf = $image->getLocalFile();
-		$user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity( $lf->getUploader() );
+		$user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity($lf->getUploader());
 
-		if ( DiscordUtils::isDisabled( $hookName, NS_FILE, $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, NS_FILE, $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot change
 			return true;
 		}
@@ -353,20 +356,20 @@ class DiscordHooks {
 	 * Called when a file is deleted
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/FileDeleteComplete
 	 */
-	public static function onFileDeleteComplete( $file, $oldimage, $article, $user, $reason ) {
+	public static function onFileDeleteComplete($file, $oldimage, $article, $user, $reason) {
 		global $wgDiscordNoBots;
 		$hookName = 'FileDeleteComplete';
 
-		if ( DiscordUtils::isDisabled( $hookName, NS_FILE, $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, NS_FILE, $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot change
 			return true;
 		}
 
-		if ( $article ) {
+		if ($article) {
 			// Entire page was deleted, onArticleDeleteComplete will handle this
 			return true;
 		}
@@ -385,22 +388,25 @@ class DiscordHooks {
 	 * Called when a file is restored
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/FileUndeleteComplete
 	 */
-	public static function onFileUndeleteComplete( $title, $fileVersions, $user, $reason ) {
+	public static function onFileUndeleteComplete($title, $fileVersions, $user, $reason) {
 		global $wgDiscordNoBots;
 		$hookName = 'FileUndeleteComplete';
 
-		if ( DiscordUtils::isDisabled( $hookName, NS_FILE, $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, NS_FILE, $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot change
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-fileundeletecomplete', DiscordUtils::createUserLinks( $user ),
-			DiscordUtils::createMarkdownLink( $title, $title->getFullURL( '', false, PROTO_CANONICAL ) ),
-			( $reason ? ('`' . DiscordUtils::sanitiseText( DiscordUtils::truncateText( $reason ) ) . '`' ) : '' ) )->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-fileundeletecomplete',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($title, $title->getFullURL('', false, PROTO_CANONICAL)),
+			($reason ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($reason)) . '`') : '')
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -409,46 +415,53 @@ class DiscordHooks {
 	 * Called when a page is imported
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/AfterImportPage
 	 */
-	public static function onAfterImportPage( $title, $origTitle, $revCount, $sRevCount, $pageInfo ) {
+	public static function onAfterImportPage($title, $origTitle, $revCount, $sRevCount, $pageInfo) {
 		global $wgDiscordNoBots;
 		$hookName = 'AfterImportPage';
 
 		$user = RequestContext::getMain()->getUser();
 
-		if ( DiscordUtils::isDisabled( $hookName, $title->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $title->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-afterimportpage', DiscordUtils::createUserLinks( $user ),
-			DiscordUtils::createMarkdownLink( $title, $title->getFullURL( '', false, PROTO_CANONICAL ) ),
-			$revCount, $sRevCount)->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-afterimportpage',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($title, $title->getFullURL('', false, PROTO_CANONICAL)),
+			$revCount,
+			$sRevCount
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
 
-	public static function onArticleMergeComplete( $targetTitle, $destTitle ) {
+	public static function onArticleMergeComplete($targetTitle, $destTitle) {
 		global $wgDiscordNoBots;
 		$hookName = 'ArticleMergeComplete';
 
 		$user = RequestContext::getMain()->getUser();
 
-		if ( DiscordUtils::isDisabled( $hookName, $destTitle->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $destTitle->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-articlemergecomplete', DiscordUtils::createUserLinks( $user ),
-			DiscordUtils::createMarkdownLink( $targetTitle, $targetTitle->getFullURL( '', false, PROTO_CANONICAL ) ),
-			DiscordUtils::createMarkdownLink( $destTitle, $destTitle->getFullURL( '', false, PROTO_CANONICAL ) ))->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-articlemergecomplete',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($targetTitle, $targetTitle->getFullURL('', false, PROTO_CANONICAL)),
+			DiscordUtils::createMarkdownLink($destTitle, $destTitle->getFullURL('', false, PROTO_CANONICAL))
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -457,30 +470,33 @@ class DiscordHooks {
 	 * Called when a revision is approved (Approved Revs extension)
 	 * @see https://github.com/wikimedia/mediawiki-extensions-ApprovedRevs/blob/REL1_34/includes/ApprovedRevs_body.php
 	 */
-	public static function onApprovedRevsRevisionApproved ( $output, $title, $rev_id, $content ) {
+	public static function onApprovedRevsRevisionApproved($output, $title, $rev_id, $content) {
 		global $wgDiscordNoBots;
 		$hookName = 'ApprovedRevsRevisionApproved';
 
 		$user = RequestContext::getMain()->getUser();
 
-		if ( DiscordUtils::isDisabled( $hookName, $title->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $title->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot
 			return true;
 		}
 
 		// Get the revision being approved here
-		$rev = MediaWikiServices::getInstance()->getRevisionLookup()->getRevisionByTitle( $title, $rev_id );
-		$revLink = $title->getFullURL( '', false, PROTO_CANONICAL );
-		$revAuthor = DiscordUtils::createUserLinks( $rev->getUser( RevisionRecord::RAW ) );
+		$rev = MediaWikiServices::getInstance()->getRevisionLookup()->getRevisionByTitle($title, $rev_id);
+		$revLink = $title->getFullURL('', false, PROTO_CANONICAL);
+		$revAuthor = DiscordUtils::createUserLinks($rev->getUser(RevisionRecord::RAW));
 
-		$msg = wfMessage( 'discord-approvedrevsrevisionapproved', DiscordUtils::createUserLinks( $user ),
-			DiscordUtils::createMarkdownLink( $title, $title->getFullURL( '', false, PROTO_CANONICAL ) ),
-			DiscordUtils::createMarkdownLink( $rev_id, $revLink ),
-			$revAuthor)->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-approvedrevsrevisionapproved',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($title, $title->getFullURL('', false, PROTO_CANONICAL)),
+			DiscordUtils::createMarkdownLink($rev_id, $revLink),
+			$revAuthor
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -489,23 +505,26 @@ class DiscordHooks {
 	 * Called when a revision is unapproved (Approved Revs extension)
 	 * @see https://github.com/wikimedia/mediawiki-extensions-ApprovedRevs/blob/REL1_34/includes/ApprovedRevs_body.php
 	 */
-	public static function onApprovedRevsRevisionUnapproved ( $output, $title, $content ) {
+	public static function onApprovedRevsRevisionUnapproved($output, $title, $content) {
 		global $wgDiscordNoBots;
 		$hookName = 'ApprovedRevsRevisionUnapproved';
 
 		$user = RequestContext::getMain()->getUser();
 
-		if ( DiscordUtils::isDisabled( $hookName, $title->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $title->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-approvedrevsrevisionunapproved', DiscordUtils::createUserLinks( $user ),
-			DiscordUtils::createMarkdownLink( $title, $title->getFullURL( '', false, PROTO_CANONICAL ) ) )->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-approvedrevsrevisionunapproved',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($title, $title->getFullURL('', false, PROTO_CANONICAL))
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -514,30 +533,33 @@ class DiscordHooks {
 	 * Called when a file is approved (Approved Revs extension)
 	 * @see https://github.com/wikimedia/mediawiki-extensions-ApprovedRevs/blob/REL1_34/includes/ApprovedRevs_body.php
 	 */
-	public static function onApprovedRevsFileRevisionApproved ( $parser, $title, $timestamp, $sha1 ) {
+	public static function onApprovedRevsFileRevisionApproved($parser, $title, $timestamp, $sha1) {
 		global $wgDiscordNoBots;
 		$hookName = 'ApprovedRevsFileRevisionApproved';
 
 		$user = RequestContext::getMain()->getUser();
 
-		if ( DiscordUtils::isDisabled( $hookName, $title->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $title->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot
 			return true;
 		}
 
-		$imagepage = ImagePage::newFromID( $title->getArticleID() );
+		$imagepage = ImagePage::newFromID($title->getArticleID());
 		$displayedFile = $imagepage->getDisplayedFile();
 		$displayedFileUrl = $displayedFile->getCanonicalUrl(); // getFullURL doesn't work quite the same on File classes
-		$uploader = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity( $displayedFile->getUploader() );
+		$uploader = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity($displayedFile->getUploader());
 
-		$msg = wfMessage( 'discord-approvedrevsfilerevisionapproved', DiscordUtils::createUserLinks( $user ),
-		    DiscordUtils::createMarkdownLink( $title, $title->getFullURL( '', false, PROTO_CANONICAL ) ),
-			DiscordUtils::createMarkdownLink( 'direct', $displayedFileUrl ),
-			DiscordUtils::createUserLinks( $uploader ) )->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-approvedrevsfilerevisionapproved',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($title, $title->getFullURL('', false, PROTO_CANONICAL)),
+			DiscordUtils::createMarkdownLink('direct', $displayedFileUrl),
+			DiscordUtils::createUserLinks($uploader)
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -546,23 +568,26 @@ class DiscordHooks {
 	 * Called when a file is unapproved (Approved Revs extension)
 	 * @see https://github.com/wikimedia/mediawiki-extensions-ApprovedRevs/blob/REL1_34/includes/ApprovedRevs_body.php
 	 */
-	public static function onApprovedRevsFileRevisionUnapproved ( $parser, $title ) {
+	public static function onApprovedRevsFileRevisionUnapproved($parser, $title) {
 		global $wgDiscordNoBots;
 		$hookName = 'ApprovedRevsFileRevisionUnapproved';
 
 		$user = RequestContext::getMain()->getUser();
 
-		if ( DiscordUtils::isDisabled( $hookName, $title->getNamespace(), $user ) ) {
+		if (DiscordUtils::isDisabled($hookName, $title->getNamespace(), $user)) {
 			return true;
 		}
 
-		if ( $wgDiscordNoBots && $user->isBot() ) {
+		if ($wgDiscordNoBots && $user->isBot()) {
 			// Don't continue, this is a bot
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-approvedrevsfilerevisionunapproved', DiscordUtils::createUserLinks( $user ),
-			DiscordUtils::createMarkdownLink( $title, $title->getFullURL( '', false, PROTO_CANONICAL ) ) )->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-approvedrevsfilerevisionunapproved',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($title, $title->getFullURL('', false, PROTO_CANONICAL))
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -571,21 +596,24 @@ class DiscordHooks {
 	 * Called when a user is renamed (Renameuser extension)
 	 * @see https://github.com/wikimedia/mediawiki-extensions-Renameuser/blob/REL1_36/includes/RenameuserSQL.php
 	 */
-	public static function onRenameUserComplete ( $uid, $old, $new ) {
+	public static function onRenameUserComplete($uid, $old, $new) {
 		$hookName = 'RenameUserComplete';
 
 		$user = RequestContext::getMain()->getUser();
 
-		if ( DiscordUtils::isDisabled( $hookName, null, null ) ) {
+		if (DiscordUtils::isDisabled($hookName, null, null)) {
 			return true;
 		}
 
-        $renamedUserAsTitle = MediaWikiServices::getInstance()->getUserFactory()->newFromName( $new )->getUserPage();
+		$renamedUserAsTitle = MediaWikiServices::getInstance()->getUserFactory()->newFromName($new)->getUserPage();
 
-		$msg = wfMessage( 'discord-renameusercomplete', DiscordUtils::createUserLinks( $user ),
+		$msg = wfMessage(
+			'discord-renameusercomplete',
+			DiscordUtils::createUserLinks($user),
 			"*$old*",
-			DiscordUtils::createMarkdownLink( $new, $renamedUserAsTitle->getFullURL( '', false, PROTO_CANONICAL ) ) )->inContentLanguage()->plain();
-			DiscordUtils::handleDiscord($hookName, $msg);
+			DiscordUtils::createMarkdownLink($new, $renamedUserAsTitle->getFullURL('', false, PROTO_CANONICAL))
+		)->inContentLanguage()->plain();
+		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
 }
