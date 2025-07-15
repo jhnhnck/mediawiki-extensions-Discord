@@ -225,10 +225,11 @@ class DiscordUtils {
 	}
 
 	/**
-	 * Sanitise text input, including removing the potential for abuse
+     * Sanitize text input, including removing the potential for abuse
 	 * of Discord's @everyone and @here pings
+     * TODO: Surely theres a better way of doing this
 	 */
-	public static function sanitiseText($text) {
+    public static function sanitizeText($text) {
 		$text = preg_replace('/(`|@)/', '', $text);
         return $text;
     }

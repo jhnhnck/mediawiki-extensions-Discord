@@ -56,10 +56,13 @@ class DiscordHooks {
 			$msgKey = 'discord-create';
 		}
 
-		$msg = wfMessage( $msgKey, DiscordUtils::createUserLinks( $user ),
-			DiscordUtils::createMarkdownLink( $wikiPage->getTitle(), $wikiPage->getTitle()->getFullURL( '', false, PROTO_CANONICAL ) ),
-			DiscordUtils::createRevisionText( $revision ),
-			( $summary ? ('`' . DiscordUtils::sanitiseText( DiscordUtils::truncateText( $summary ) ) . '`' ) : '' ) )->inContentLanguage()->plain();
+		$msg = wfMessage(
+			$msgKey,
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($wikiPage->getTitle(), $wikiPage->getTitle()->getFullURL('', false, PROTO_CANONICAL)),
+			DiscordUtils::createRevisionText($revision),
+			($summary ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($summary)) . '`') : '')
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -84,10 +87,13 @@ class DiscordHooks {
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-articledelete', DiscordUtils::createUserLinks( $user ),
-			DiscordUtils::createMarkdownLink( $page->getTitle(), $page->getTitle()->getFullURL( '', false, PROTO_CANONICAL ) ),
-			( $reason ? ('`' . DiscordUtils::sanitiseText( DiscordUtils::truncateText( $reason ) ) . '`' ) : '' ),
-			$archivedRevisionCount)->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-articledelete',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($page->getTitle(), $page->getTitle()->getFullURL('', false, PROTO_CANONICAL)),
+			($reason ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($reason)) . '`') : ''),
+			$archivedRevisionCount
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -111,10 +117,13 @@ class DiscordHooks {
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-articleundelete', DiscordUtils::createUserLinks( $user ),
-			($create ? '' : wfMessage( 'discord-undeleterev' )->inContentLanguage()->text() ),
-			DiscordUtils::createMarkdownLink( $title, $title->getFullURL( '', false, PROTO_CANONICAL ) ),
-			( $comment ? ('`' . DiscordUtils::sanitiseText( DiscordUtils::truncateText( $comment ) ) . '`' ) : '' ))->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-articleundelete',
+			DiscordUtils::createUserLinks($user),
+			($create ? '' : wfMessage('discord-undeleterev')->inContentLanguage()->text()),
+			DiscordUtils::createMarkdownLink($title, $title->getFullURL('', false, PROTO_CANONICAL)),
+			($comment ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($comment)) . '`') : '')
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -162,10 +171,13 @@ class DiscordHooks {
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-articleprotect', DiscordUtils::createUserLinks( $user ),
-			DiscordUtils::createMarkdownLink( $article->getTitle(), $article->getTitle()->getFullURL( '', false, PROTO_CANONICAL ) ),
-			( $reason ? ('`' . DiscordUtils::sanitiseText( DiscordUtils::truncateText( $reason ) ) . '`' ) : '' ),
-			implode(", ", $protect) )->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-articleprotect',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($article->getTitle(), $article->getTitle()->getFullURL('', false, PROTO_CANONICAL)),
+			($reason ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($reason)) . '`') : ''),
+			implode(", ", $protect)
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -188,11 +200,14 @@ class DiscordHooks {
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-titlemove', DiscordUtils::createUserLinks( $user ),
-			DiscordUtils::createMarkdownLink( $old, Title::castFromLinkTarget( $old )->getFullURL( '', false, PROTO_CANONICAL ) ),
-			DiscordUtils::createMarkdownLink( $new, Title::castFromLinkTarget( $new )->getFullURL( '', false, PROTO_CANONICAL ) ),
-			( $reason ? ('`' . DiscordUtils::sanitiseText( DiscordUtils::truncateText( $reason ) ) . '`' ) : '' ),
-			DiscordUtils::createRevisionText( $revision ) )->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-titlemove',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($old, Title::castFromLinkTarget($old)->getFullURL('', false, PROTO_CANONICAL)),
+			DiscordUtils::createMarkdownLink($new, Title::castFromLinkTarget($new)->getFullURL('', false, PROTO_CANONICAL)),
+			($reason ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($reason)) . '`') : ''),
+			DiscordUtils::createRevisionText($revision)
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -236,9 +251,13 @@ class DiscordHooks {
 			$target = $block->getTargetName();
 		}
 
-		$msg = wfMessage( 'discord-blockipcomplete', DiscordUtils::createUserLinks( $user ), DiscordUtils::createUserLinks( $target ),
-			( $block->getReasonComment()->text ? ('`' . DiscordUtils::sanitiseText( DiscordUtils::truncateText( $block->getReasonComment()->text ) ) . '`' ) : '' ),
-			$expiryMsg )->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-blockipcomplete',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createUserLinks($target),
+			($block->getReasonComment()->text ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($block->getReasonComment()->text)) . '`') : ''),
+			$expiryMsg
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -280,11 +299,14 @@ class DiscordHooks {
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-usergroupschanged', DiscordUtils::createUserLinks( $performer ),
-			DiscordUtils::createUserLinks( $user ),
-			( $reason ? ('`' . DiscordUtils::sanitiseText( DiscordUtils::truncateText( $reason ) ) . '`' ) : '' ),
-			( ( count($added) > 0 ) ? ( '+ ' . join(', ', $added) ) : ''),
-			( ( count($removed) > 0 ) ? ( '- ' . join(', ', $removed) ) : '' ) )->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-usergroupschanged',
+			DiscordUtils::createUserLinks($performer),
+			DiscordUtils::createUserLinks($user),
+			($reason ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($reason)) . '`') : ''),
+			((count($added) > 0) ? ('+ ' . join(', ', $added)) : ''),
+			((count($removed) > 0) ? ('- ' . join(', ', $removed)) : '')
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -312,14 +334,17 @@ class DiscordHooks {
 		$comment = $lf->getDescription();
 		$isNewRevision = count($lf->getHistory()) > 0;
 
-		$msg = wfMessage( 'discord-uploadcomplete', DiscordUtils::createUserLinks( $user ),
-			( $isNewRevision ? wfMessage( 'discord-uploadnewver' )->inContentLanguage()->text() : '' ),
-			DiscordUtils::createMarkdownLink( $lf->getName(), $lf->getTitle()->getFullURL( '', false, PROTO_CANONICAL ) ),
-			( $comment ? ('`' . DiscordUtils::sanitiseText( DiscordUtils::truncateText( $comment ) ) . '`' ) : '' ),
+		$msg = wfMessage(
+			'discord-uploadcomplete',
+			DiscordUtils::createUserLinks($user),
+			($isNewRevision ? wfMessage('discord-uploadnewver')->inContentLanguage()->text() : ''),
+			DiscordUtils::createMarkdownLink($lf->getName(), $lf->getTitle()->getFullURL('', false, PROTO_CANONICAL)),
+			($comment ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($comment)) . '`') : ''),
 			DiscordUtils::formatBytes($lf->getSize()),
 			$lf->getWidth(),
 			$lf->getHeight(),
-			$lf->getMimeType() )->inContentLanguage()->plain();
+			$lf->getMimeType()
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
@@ -346,9 +371,12 @@ class DiscordHooks {
 			return true;
 		}
 
-		$msg = wfMessage( 'discord-filedeletecomplete', DiscordUtils::createUserLinks( $user ),
-			DiscordUtils::createMarkdownLink( $file->getName(), $file->getTitle()->getFullURL( '', false, PROTO_CANONICAL ) ),
-			( $reason ? ('`' . DiscordUtils::sanitiseText( DiscordUtils::truncateText( $reason ) ) . '`' ) : '' ) )->inContentLanguage()->plain();
+		$msg = wfMessage(
+			'discord-filedeletecomplete',
+			DiscordUtils::createUserLinks($user),
+			DiscordUtils::createMarkdownLink($file->getName(), $file->getTitle()->getFullURL('', false, PROTO_CANONICAL)),
+			($reason ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($reason)) . '`') : '')
+		)->inContentLanguage()->plain();
 		DiscordUtils::handleDiscord($hookName, $msg);
 		return true;
 	}
