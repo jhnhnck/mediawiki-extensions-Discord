@@ -1,5 +1,7 @@
 <?php
 
+namespace MediaWiki\Extension\Discord;
+
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\UserIdentity;
 use MediaWiki\Title\Title;
@@ -228,8 +230,6 @@ class DiscordUtils {
 	 */
 	public static function sanitiseText($text) {
 		$text = preg_replace('/(`|@)/', '', $text);
-		return $text;
-	}
+        return $text;
+    }
 }
-
-?>

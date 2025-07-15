@@ -50,33 +50,32 @@
 			"RenameUserComplete": ":people_holding_hands:"
 		}
 	},
-	"AutoloadClasses": {
-		"DiscordHooks": "src/DiscordHooks.php",
-		"DiscordUtils": "src/Utils.php"
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\Discord\\": "src/"
 	},
 	"MessagesDirs": {
 		"mw-discord": "i18n"
 	},
 	"Hooks": {
-		"PageSaveComplete": "DiscordHooks::onPageSaveComplete",
-		"PageDeleteComplete": "DiscordHooks::onPageDeleteComplete",
-		"ArticleUndelete": "DiscordHooks::onArticleUndelete",
-		"ArticleRevisionVisibilitySet": "DiscordHooks::onArticleRevisionVisibilitySet",
-		"ArticleProtectComplete": "DiscordHooks::onArticleProtectComplete",
-		"PageMoveComplete": "DiscordHooks::onPageMoveComplete",
-		"LocalUserCreated": "DiscordHooks::onLocalUserCreated",
-		"BlockIpComplete": "DiscordHooks::onBlockIpComplete",
-		"UnblockUserComplete": "DiscordHooks::onUnblockUserComplete",
-		"UserGroupsChanged": "DiscordHooks::onUserGroupsChanged",
-		"UploadComplete": "DiscordHooks::onUploadComplete",
-		"FileDeleteComplete": "DiscordHooks::onFileDeleteComplete",
-		"FileUndeleteComplete": "DiscordHooks::onFileUndeleteComplete",
-		"AfterImportPage": "DiscordHooks::onAfterImportPage",
-		"ArticleMergeComplete": "DiscordHooks::onArticleMergeComplete",
-		"ApprovedRevsRevisionApproved": "DiscordHooks::onApprovedRevsRevisionApproved",
-		"ApprovedRevsRevisionUnapproved": "DiscordHooks::onApprovedRevsRevisionUnapproved",
-		"ApprovedRevsFileRevisionApproved": "DiscordHooks::onApprovedRevsFileRevisionApproved",
-		"ApprovedRevsFileRevisionUnapproved": "DiscordHooks::onApprovedRevsFileRevisionUnapproved",
-		"RenameUserComplete": "DiscordHooks::onRenameUserComplete"
+		"PageSaveComplete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onPageSaveComplete",
+		"PageDeleteComplete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onPageDeleteComplete",
+		"ArticleUndelete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onArticleUndelete",
+		"ArticleRevisionVisibilitySet": "MediaWiki\\Extension\\Discord\\DiscordHooks::onArticleRevisionVisibilitySet",
+		"ArticleProtectComplete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onArticleProtectComplete",
+		"PageMoveComplete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onPageMoveComplete",
+		"LocalUserCreated": "MediaWiki\\Extension\\Discord\\DiscordHooks::onLocalUserCreated",
+		"BlockIpComplete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onBlockIpComplete",
+		"UnblockUserComplete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onUnblockUserComplete",
+		"UserGroupsChanged": "MediaWiki\\Extension\\Discord\\DiscordHooks::onUserGroupsChanged",
+		"UploadComplete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onUploadComplete",
+		"FileDeleteComplete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onFileDeleteComplete",
+		"FileUndeleteComplete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onFileUndeleteComplete",
+		"AfterImportPage": "MediaWiki\\Extension\\Discord\\DiscordHooks::onAfterImportPage",
+		"ArticleMergeComplete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onArticleMergeComplete",
+		"ApprovedRevsRevisionApproved": "MediaWiki\\Extension\\Discord\\DiscordHooks::onApprovedRevsRevisionApproved",
+		"ApprovedRevsRevisionUnapproved": "MediaWiki\\Extension\\Discord\\DiscordHooks::onApprovedRevsRevisionUnapproved",
+		"ApprovedRevsFileRevisionApproved": "MediaWiki\\Extension\\Discord\\DiscordHooks::onApprovedRevsFileRevisionApproved",
+		"ApprovedRevsFileRevisionUnapproved": "MediaWiki\\Extension\\Discord\\DiscordHooks::onApprovedRevsFileRevisionUnapproved",
+		"RenameUserComplete": "MediaWiki\\Extension\\Discord\\DiscordHooks::onRenameUserComplete"
 	}
 }
