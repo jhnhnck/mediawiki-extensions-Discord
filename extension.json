@@ -25,7 +25,6 @@
 			"Redirect fixer"
 		],
 		"DiscordPrependTimestamp": false,
-		"DiscordUseFileGetContents": false,
 		"DiscordUseEmojis": false,
 		"DiscordEmojis": {
 			"PageSaveComplete": ":pencil2:",

@@ -16,12 +16,9 @@ Multiple webhook URLs are supported and messages will be sent to all of them.
   - We do not guarantee support for versions of MediaWiki that are considered end-of-life.
   - The `master` branch may contain changes that are only applicable to the cutting-edge alpha version of MediaWiki.
 
-### Recommended
-- **cURL**: By default, this extension sends requests using cURL. If you don't have cURL, you could try setting `$wgDiscordUseFileGetContents` to `true` instead, but this is not recommended.
-
 ## Installation
 
-1. Clone this repository to your MediaWiki installation's `extensions` folder using `git clone https://github.com/jaydenkieran/mw-discord.git -b REL1_35 Discord`
+1. Clone this repository to your MediaWiki installation's `extensions` folder using `git clone https://github.com/jhnhnck/mediawiki-extension-Discord.git Discord`
 2. Modify your `LocalSettings.php` file and add:
 
 ```php
@@ -58,7 +55,6 @@ These parameters aren't required for the extension to work.
 | `$wgDiscordDisabledNS` | int array | List of namespace **IDs** to disable sending webhooks for. (see [below](#namespaces)) | `[]`
 | `$wgDiscordDisabledUsers` | string array | List of users whose performed actions shouldn't send webhooks | `[]`
 | `$wgDiscordPrependTimestamp` | bool | Prepend a timestamp (in UTC) to all sent messages. The format can be changed by editing the MediaWiki message `discord-timestampformat` | `false`
-| `$wgDiscordUseFileGetContents` | bool | Use `file_get_contents` instead of cURL. Requires `allow_url_fopen` to be set to true in `php.ini`. Not recommended as cURL makes simultaneous calls instead. | `false`
 | `$wgDiscordUseEmojis` | bool | Prepend emojis to different types of messages to help distinguish them | `false`
 | `$wgDiscordEmojis` | string associative array | Map of hook names and their associated emojis to prepend to messages if `$wgDiscordUseEmojis` is enabled | See [extension.json](/extension.json#L30)
 

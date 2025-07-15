@@ -56,7 +56,7 @@ class DiscordUtils {
 	 * Handles sending a webhook to Discord using cURL
 	 */
 	public static function handleDiscord ($hookName, $msg) {
-		global $wgDiscordWebhookURL, $wgDiscordEmojis, $wgDiscordUseEmojis, $wgDiscordPrependTimestamp, $wgDiscordUseFileGetContents;
+        global $wgDiscordWebhookURL, $wgDiscordEmojis, $wgDiscordUseEmojis, $wgDiscordPrependTimestamp;
 
 		if ( !$wgDiscordWebhookURL ) {
 			// There's nothing in here, so we won't do anything
