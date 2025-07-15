@@ -2,6 +2,7 @@
 
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\UserIdentity;
+use MediaWiki\Title\Title;
 
 class DiscordUtils {
 	/**
@@ -198,15 +199,20 @@ class DiscordUtils {
 	}
 
 	/**
-	 * Creates formatted text for a specific Revision object
-	 */
-	public static function createRevisionText ($revision) {
-		$diff = DiscordUtils::createMarkdownLink( wfMessage( 'discord-diff' )->inContentLanguage()->text(), $revision->getPageAsLinkTarget()->getFullURL( [ 'diff' => 'prev', 'oldid' => $revision->getId() ], false, PROTO_CANONICAL ) );
-		$minor = '';
-		$size = '';
-		if ( $revision->isMinor() ) {
-			$minor .= wfMessage( 'discord-minor' )->inContentLanguage()->text();
-		}
+     * Creates formatted text for a specific Revision object
+     */
+    public static function createRevisionText ($revision) {
+        $linkTarget = $revision->getPageAsLinkTarget();
+        $title = Title::newFromLinkTarget( $linkTarget );
+        if ( !$title ) {
+            return '';
+        }
+        $diff = DiscordUtils::createMarkdownLink( wfMessage( 'discord-diff' )->inContentLanguage()->text(), $title->getFullURL( [ 'diff' => 'prev', 'oldid' => $revision->getId() ], false, PROTO_CANONICAL ) );
+        $minor = '';
+        $size = '';
+        if ( $revision->isMinor() ) {
+            $minor .= wfMessage( 'discord-minor' )->inContentLanguage()->text();
+        }
 		$parentId = $revision->getParentId();
 		if ( $parentId ) {
 			$parent = MediaWikiServices::getInstance()->getRevisionLookup()->getRevisionById( $parentId );
