@@ -162,14 +162,15 @@ class DiscordUtils {
     public static function createRevisionText($revision) {
         $linkTarget = $revision->getPageAsLinkTarget();
         $title = Title::newFromLinkTarget($linkTarget);
-        $minor = '';
-		$size = '';
 
         if (!$title) {
             return '';
         }
 
-+       $diff = DiscordUtils::createMarkdownLink(wfMessage('discord-diff')->inContentLanguage()->text(), $title->getFullURL(['diff' => 'prev', 'oldid' => $revision->getId()], false, PROTO_CANONICAL));
+        $diff = DiscordUtils::createMarkdownLink(wfMessage('discord-diff')->inContentLanguage()->text(), $title->getFullURL(['diff' => 'prev', 'oldid' => $revision->getId()], false, PROTO_CANONICAL));
+
+        $minor = '';
+        $size = '';
 
 		if ($revision->isMinor()) {
 			$minor .= wfMessage('discord-minor')->inContentLanguage()->text();
@@ -181,11 +182,11 @@ class DiscordUtils {
 			$parent = MediaWikiServices::getInstance()->getRevisionLookup()->getRevisionById($parentId);
 
 			if ($parent) {
-				$size .= wfMessage('discord-size', sprintf( "%+d", $revision->getSize() - $parent->getSize()))->inContentLanguage()->text();
+                $size .= wfMessage('discord-size', sprintf("%+d", $revision->getSize() - $parent->getSize()))->inContentLanguage()->text();
 			}
 		}
 		if ($size == '') {
-			$size .= wfMessage('discord-size', sprintf( "%d", $revision->getSize()))->inContentLanguage()->text();
+            $size .= wfMessage('discord-size', sprintf("%d", $revision->getSize()))->inContentLanguage()->text();
 		}
 
 		$text = wfMessage('discord-revisionlinks', $diff, $minor, $size)->inContentLanguage()->text();
