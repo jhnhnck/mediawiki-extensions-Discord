@@ -1,10 +1,10 @@
 <?php
-
 namespace MediaWiki\Extension\Discord;
 
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\UserIdentity;
 use MediaWiki\Title\Title;
+use MediaWiki\User\User;
 
 class DiscordUtils {
     /**

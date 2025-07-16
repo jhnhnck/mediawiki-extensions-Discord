@@ -1,14 +1,18 @@
 <?php
-
 namespace MediaWiki\Extension\Discord;
 
+use ManualLogEntry;
 use MediaWiki\Block\DatabaseBlock;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Linker\LinkTarget;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Page\ImagePage;
+use MediaWiki\Page\WikiPage;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Storage\EditResult;
-use MediaWiki\User\UserIdentity;
 use MediaWiki\Title\Title;
+use MediaWiki\User\User;
+use MediaWiki\User\UserIdentity;
 
 /**
  * Hooks for the Discord extension
