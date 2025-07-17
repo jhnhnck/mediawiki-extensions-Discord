@@ -1,13 +1,15 @@
 <?php
 namespace MediaWiki\Extension\Discord;
 
-use ManualLogEntry;
 use MediaWiki\Block\DatabaseBlock;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\Linker\LinkTarget;
+use MediaWiki\Logging\ManualLogEntry;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Page\ImagePage;
+use MediaWiki\Page\ProperPageIdentity;
 use MediaWiki\Page\WikiPage;
+use MediaWiki\Permissions\Authority;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Storage\EditResult;
 use MediaWiki\Title\Title;
@@ -72,12 +74,12 @@ class DiscordHooks {
 	}
 
 	/**
-	 * Called when a page is deleted
-	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageDeleteComplete
-	 */
-	public static function onPageDeleteComplete(MediaWiki\Page\ProperPageIdentity $page, MediaWiki\Permissions\Authority $deleter, string $reason, int $pageID, MediaWiki\Revision\RevisionRecord $deletedRev, ManualLogEntry $logEntry, int $archivedRevisionCount) {
-		global $wgDiscordNoBots;
-		$hookName = 'PageDeleteComplete';
+     * Called when a page is deleted
+     * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageDeleteComplete
+     */
+    public static function onPageDeleteComplete(ProperPageIdentity $page, Authority $deleter, string $reason, int $pageID, RevisionRecord $deletedRev, ManualLogEntry $logEntry, int $archivedRevisionCount) {
+        global $wgDiscordNoBots;
+        $hookName = 'PageDeleteComplete';
 
 		$user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity($deleter->getUser());
 		$page = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle($page);
