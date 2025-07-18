@@ -167,10 +167,7 @@ class DiscordUtils {
      * Strip bad characters from a URL
      */
     public static function encodeURL($url) {
-        $url = str_replace(" ", "%20", $url);
-        $url = str_replace("(", "%28", $url);
-        $url = str_replace(")", "%29", $url);
-        return $url;
+        return urlencode($url);
     }
 
     /**
