@@ -1,9 +1,7 @@
-# Discord (mw-discord)
+# NovaDiscord
 MediaWiki extension for sending notifications to a Discord webhook from MediaWiki. When a certain event occurs on your MediaWiki wiki, including new edits, they can be sent as a message to a channel on a Discord server using a webhook.
 
 Multiple webhook URLs are supported and messages will be sent to all of them.
-
-**Live demo**: https://runescape.wiki (https://discord.gg/runescapewiki)
 
 <p align="center">
   <img src="https://i.imgur.com/tCehglJ.png" alt="Example"/>
@@ -23,7 +21,7 @@ Multiple webhook URLs are supported and messages will be sent to all of them.
 
 ```php
 // Load the extension
-wfLoadExtension( 'Discord' );
+wfLoadExtension( 'NovaDiscord' );
 // Set the webhook URL(s) (string or array)
 $wgDiscordWebhookURL = [ '' ];
 ```
@@ -89,10 +87,10 @@ As we use Namespace IDs the following resources might be helpful:
 - [Built in namespaces' IDs](https://www.mediawiki.org/wiki/Manual:Namespace#Built-in_namespaces)
 - [Extension default namespaces](https://www.mediawiki.org/wiki/Extension_default_namespaces)
 
-## Translation
-You can submit translations for this extension on [Translatewiki.net](https://translatewiki.net/wiki/Special:Translate/mwgithub-mw-discord).
+[//]: # (## Translation)
+[//]: # (You can submit translations for this extension on [Translatewiki.net]&#40;https://translatewiki.net/wiki/Special:Translate/mwgithub-mw-discord&#41;.)
 
 ## License
 This extension is available under the MIT license. You can [see here](LICENSE) for more information.
 
-This extension  was inspired by Szmyk's [mediawiki-discord](https://github.com/Szmyk/mediawiki-discord) project.
+This extension was based off the work of jayktaylor's [mw-discord](https://github.com/jayktaylor/mw-discord) project.

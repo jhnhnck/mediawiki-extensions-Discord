@@ -1,6 +1,10 @@
 <?php
+/**
+ * NovaDiscord - Utilities
+ * This file is licensed under the MIT License; See LICENSE for full text.
+ */
 
-namespace MediaWiki\Extension\Discord;
+namespace MediaWiki\Extension\NovaDiscord;
 
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
