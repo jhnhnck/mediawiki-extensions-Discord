@@ -1,10 +1,11 @@
 <?php
+
 namespace MediaWiki\Extension\Discord;
 
 use MediaWiki\MediaWikiServices;
-use MediaWiki\User\UserIdentity;
 use MediaWiki\Title\Title;
 use MediaWiki\User\User;
+use MediaWiki\User\UserIdentity;
 
 class DiscordUtils {
     /**
@@ -22,8 +23,8 @@ class DiscordUtils {
             wfDebugLog('discord', 'The value of $wgDiscordDisabledHooks is not valid and therefore all hooks are enabled.');
         }
         if (is_array($wgDiscordDisabledNS)) {
-            if (!is_null($ns)) {
-                $ns = (int) $ns;
+            if ($ns !== null) {
+                $ns = (int)$ns;
                 if (in_array($ns, $wgDiscordDisabledNS)) {
                     // Namespace is disabled, return true
                     return true;
@@ -33,7 +34,7 @@ class DiscordUtils {
             wfDebugLog('discord', 'The value of $wgDiscordDisabledNS is not valid and therefore all namespaces are enabled.');
         }
         if (is_array($wgDiscordDisabledUsers)) {
-            if (!is_null($user)) {
+            if ($user !== null) {
                 if ($user instanceof UserIdentity) {
                     $user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity($user);
                 }
@@ -56,6 +57,8 @@ class DiscordUtils {
      * Handles sending a webhook to Discord using cURL
      */
     public static function handleDiscord($hookName, $msg) {
+        wfDebugLog('discord', 'Attempting to handle ' . $hookName . ': ' . $msg);
+
         global $wgDiscordWebhookURL, $wgDiscordEmojis, $wgDiscordUseEmojis, $wgDiscordPrependTimestamp;
 
         if (!$wgDiscordWebhookURL) {
@@ -67,7 +70,7 @@ class DiscordUtils {
 
         if (is_array($wgDiscordWebhookURL)) {
             $urls = array_merge($urls, $wgDiscordWebhookURL);
-        } else if (is_string($wgDiscordWebhookURL)) {
+        } elseif (is_string($wgDiscordWebhookURL)) {
             $urls[] = $wgDiscordWebhookURL;
         } else {
             wfDebugLog('discord', 'The value of $wgDiscordWebhookURL is not valid and therefore no webhooks could be sent.');
@@ -108,21 +111,12 @@ class DiscordUtils {
 
             // we don't care about if this succeeds, so no callback here
             $request->execute();
-			}
+        }
 
-		return true;
+        return true;
     }
 
-	/**
-	 * Creates a formatted markdown link based on text and given URL
-	 */
-	public static function createMarkdownLink($text, $url)  {
-		global $wgDiscordSuppressPreviews;
-
-		return "[" . $text . "]" . '(' . ($wgDiscordSuppressPreviews ? '<' : '') . self::encodeURL($url) . ($wgDiscordSuppressPreviews ? '>' : '') . ')';
-	}
-
-	/**
+    /**
      * Creates links for a specific MediaWiki User object
      */
     public static function createUserLinks($user) {
@@ -145,15 +139,34 @@ class DiscordUtils {
                 }
             }
 
-            $userPage = DiscordUtils::createMarkdownLink($user_abbr, ($isAnon ? $contribs : $user->getUserPage())->getFullURL('', false, PROTO_CANONICAL));
-            $userTalk = DiscordUtils::createMarkdownLink(wfMessage('discord-talk')->inContentLanguage()->text(), $user->getTalkPage()->getFullURL('', false, PROTO_CANONICAL));
-            $userContribs = DiscordUtils::createMarkdownLink(wfMessage('discord-contribs')->inContentLanguage()->text(), $contribs->getFullURL('', false, PROTO_CANONICAL));
+            $userPage = self::createMarkdownLink($user_abbr, ($isAnon ? $contribs : $user->getUserPage())->getFullURL('', false, PROTO_CANONICAL));
+            $userTalk = self::createMarkdownLink(wfMessage('discord-talk')->inContentLanguage()->text(), $user->getTalkPage()->getFullURL('', false, PROTO_CANONICAL));
+            $userContribs = self::createMarkdownLink(wfMessage('discord-contribs')->inContentLanguage()->text(), $contribs->getFullURL('', false, PROTO_CANONICAL));
             $text = wfMessage('discord-userlinks', $userPage, $userTalk, $userContribs)->inContentLanguage()->text();
         } else {
             // If we were given a string, handle this differently.
             $text = wfMessage('discord-userlinks', $user, 'n/a', 'n/a')->inContentLanguage()->text();
         }
         return $text;
+    }
+
+    /**
+     * Creates a formatted markdown link based on text and given URL
+     */
+    public static function createMarkdownLink($text, $url) {
+        global $wgDiscordSuppressPreviews;
+
+        return "[" . $text . "]" . '(' . ($wgDiscordSuppressPreviews ? '<' : '') . self::encodeURL($url) . ($wgDiscordSuppressPreviews ? '>' : '') . ')';
+    }
+
+    /**
+     * Strip bad characters from a URL
+     */
+    public static function encodeURL($url) {
+        $url = str_replace(" ", "%20", $url);
+        $url = str_replace("(", "%28", $url);
+        $url = str_replace(")", "%29", $url);
+        return $url;
     }
 
     /**
@@ -167,27 +180,27 @@ class DiscordUtils {
             return '';
         }
 
-        $diff = DiscordUtils::createMarkdownLink(wfMessage('discord-diff')->inContentLanguage()->text(), $title->getFullURL(['diff' => 'prev', 'oldid' => $revision->getId()], false, PROTO_CANONICAL));
+        $diff = self::createMarkdownLink(wfMessage('discord-diff')->inContentLanguage()->text(), $title->getFullURL(['diff' => 'prev', 'oldid' => $revision->getId()], false, PROTO_CANONICAL));
 
         $minor = '';
         $size = '';
 
-		if ($revision->isMinor()) {
-			$minor .= wfMessage('discord-minor')->inContentLanguage()->text();
-		}
+        if ($revision->isMinor()) {
+            $minor .= wfMessage('discord-minor')->inContentLanguage()->text();
+        }
 
-		$parentId = $revision->getParentId();
+        $parentId = $revision->getParentId();
 
-		if ($parentId) {
-			$parent = MediaWikiServices::getInstance()->getRevisionLookup()->getRevisionById($parentId);
+        if ($parentId) {
+            $parent = MediaWikiServices::getInstance()->getRevisionLookup()->getRevisionById($parentId);
 
-			if ($parent) {
+            if ($parent) {
                 $size .= wfMessage('discord-size', sprintf("%+d", $revision->getSize() - $parent->getSize()))->inContentLanguage()->text();
-			}
-		}
-		if ($size == '') {
+            }
+        }
+        if ($size == '') {
             $size .= wfMessage('discord-size', sprintf("%d", $revision->getSize()))->inContentLanguage()->text();
-		}
+        }
 
 		$text = wfMessage('discord-revisionlinks', $diff, $minor, $size)->inContentLanguage()->text();
 		return $text;
@@ -202,7 +215,7 @@ class DiscordUtils {
      * Formats bytes to a string representing B, KB, MB, GB, TB
      */
     public static function formatBytes($bytes, $precision = 2) {
-        $units = array('B', 'KB', 'MB', 'GB', 'TB');
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
 
         $bytes = max($bytes, 0);
         $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
