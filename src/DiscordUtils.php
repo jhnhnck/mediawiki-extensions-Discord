@@ -24,7 +24,7 @@ class DiscordUtils {
                 return true;
             }
         } else {
-            wfDebugLog('discord', 'The value of $wgDiscordDisabledHooks is not valid and therefore all hooks are enabled.');
+            wfDebugLog('nova-discord', 'The value of $wgDiscordDisabledHooks is not valid and therefore all hooks are enabled.');
         }
         if (is_array($wgDiscordDisabledNS)) {
             if ($ns !== null) {
@@ -35,7 +35,7 @@ class DiscordUtils {
                 }
             }
         } else {
-            wfDebugLog('discord', 'The value of $wgDiscordDisabledNS is not valid and therefore all namespaces are enabled.');
+            wfDebugLog('nova-discord', 'The value of $wgDiscordDisabledNS is not valid and therefore all namespaces are enabled.');
         }
         if (is_array($wgDiscordDisabledUsers)) {
             if ($user !== null) {
@@ -51,7 +51,7 @@ class DiscordUtils {
                 }
             }
         } else {
-            wfDebugLog('discord', 'The value of $wgDiscordDisabledUsers is not valid and therefore all users can trigger messages.');
+            wfDebugLog('nova-discord', 'The value of $wgDiscordDisabledUsers is not valid and therefore all users can trigger messages.');
         }
 
         return false;
@@ -61,7 +61,7 @@ class DiscordUtils {
      * Handles sending a webhook to Discord using cURL
      */
     public static function handleDiscord($hookName, $msg) {
-        wfDebugLog('discord', 'Attempting to handle ' . $hookName . ': ' . $msg);
+        wfDebugLog('nova-discord', 'Attempting to handle ' . $hookName . ': ' . $msg);
 
         global $wgDiscordWebhookURL, $wgDiscordEmojis, $wgDiscordUseEmojis, $wgDiscordPrependTimestamp;
 
@@ -77,7 +77,7 @@ class DiscordUtils {
         } elseif (is_string($wgDiscordWebhookURL)) {
             $urls[] = $wgDiscordWebhookURL;
         } else {
-            wfDebugLog('discord', 'The value of $wgDiscordWebhookURL is not valid and therefore no webhooks could be sent.');
+            wfDebugLog('nova-discord', 'The value of $wgDiscordWebhookURL is not valid and therefore no webhooks could be sent.');
             return false;
         }
 

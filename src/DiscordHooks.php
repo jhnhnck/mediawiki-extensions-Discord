@@ -75,7 +75,7 @@ class DiscordHooks {
             ($summary ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($summary)) . '`') : '')
         )->inContentLanguage()->plain();
 
-        wfDebugLog('discord', 'Attempting to handle ' . $hookName . ': ' . $msg);
+        wfDebugLog('nova-discord', 'Attempting to handle ' . $hookName . ': ' . $msg);
         DiscordUtils::handleDiscord($hookName, $msg);
         return true;
     }
