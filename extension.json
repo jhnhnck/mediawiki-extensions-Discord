@@ -18,7 +18,7 @@
 		"DiscordNoMinor": false,
 		"DiscordNoNull": true,
 		"DiscordSuppressPreviews": true,
-		"DiscordMaxChars": null,
+		"DiscordMaxChars": 2000,
 		"DiscordMaxCharsUsernames": 25,
 		"DiscordDisabledHooks": [],
 		"DiscordDisabledNS": [],
