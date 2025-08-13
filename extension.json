@@ -51,7 +51,7 @@
 		}
 	},
 	"AutoloadNamespaces": {
-		"MediaWiki\\Extension\\NovaDiscord\\": "src/"
+		"MediaWiki\\Extension\\NovaDiscord\\": "includes/"
 	},
 	"MessagesDirs": {
 		"mw-discord": "i18n"

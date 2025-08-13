@@ -32,7 +32,7 @@ class DiscordHooks {
      * Called when a page is created or edited
      * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageSaveComplete
      */
-    public static function onPageSaveComplete(WikiPage $wikiPage, UserIdentity $userIdentity, string $summary, int $flags, RevisionRecord $revision, EditResult $editResult) {
+    public static function onPageSaveComplete(WikiPage $wikiPage, UserIdentity $userIdentity, string $summary, int $flags, RevisionRecord $revision, EditResult $editResult): bool {
         global $wgDiscordNoBots, $wgDiscordNoMinor, $wgDiscordNoNull;
         $hookName = 'PageSaveComplete';
         $user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity($userIdentity);
