@@ -193,14 +193,9 @@ class DiscordUtils {
 		return $text;
 	}
 
-    /**
-     * Strip bad characters from a URL
-     */
+    // escape characters for markdown urls
     public static function encodeURL($url) {
-        $url = str_replace(" ", "%20", $url);
-        $url = str_replace("(", "%28", $url);
-        $url = str_replace(")", "%29", $url);
-        return $url;
+        return addcslashes($url, ' ()');
     }
 
     /**
@@ -232,13 +227,8 @@ class DiscordUtils {
         return $text;
     }
 
-    /**
-     * Sanitize text input, including removing the potential for abuse
-     * of Discord's @everyone and @here pings
-     * TODO: Surely theres a better way of doing this
-     */
-    public static function sanitizeText($text) {
-        $text = preg_replace('/(`|@)/', '', $text);
-        return $text;
+    // sanitize text input (may need improvement)
+    public static function sanitizeText(string $text): string {
+        return addcslashes($text, '(`|@)');
     }
 }
