@@ -1,6 +1,6 @@
 <?php
 /**
- * NovaDiscord - Hooks
+ * NovaDiscord - onPageSaveComplete Hook
  * This file is licensed under the MIT License; See LICENSE for full text.
  */
 
@@ -11,13 +11,13 @@ use MediaWiki\Page\WikiPage;
 use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\Storage\EditResult;
-use MediaWiki\Title\TitleFactory;
 use MediaWiki\Storage\Hook\PageSaveCompleteHook;
+use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\UserFactory;
 use MediaWiki\User\UserIdentity;
 use MediaWiki\Utils\UrlUtils;
 
-class PageChangeAlert extends DiscordAlert implements PageSaveCompleteHook {
+class PageSaveAlert extends DiscordAlert implements PageSaveCompleteHook {
     private UserFactory $userFactory;
 
     public function __construct(HttpRequestFactory $httpFactory, RevisionLookup $revLookup,
@@ -37,8 +37,8 @@ class PageChangeAlert extends DiscordAlert implements PageSaveCompleteHook {
      * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageSaveComplete
      */
     private function handleSaveComplete(WikiPage $wikiPage, UserIdentity $userIdentity, string $summary, int $flags, RevisionRecord $revision, EditResult $editResult): void {
-        wfDebugLog('nova-discord', 'hook onPageSaveComplete with on ' . $wikiPage);
         $hookName = 'PageSaveComplete';
+        wfDebugLog('nova-discord', 'Completing hook ' . $hookName . ' with on ' . $wikiPage);
 
         $user = $this->userFactory->newFromUserIdentity($userIdentity);
         global $wgDiscordNoMinor, $wgDiscordNoNull;
