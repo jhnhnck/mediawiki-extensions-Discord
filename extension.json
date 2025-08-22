@@ -18,7 +18,7 @@
 		"DiscordNoMinor": false,
 		"DiscordNoNull": true,
 		"DiscordSuppressPreviews": true,
-		"DiscordMaxChars": 2000,
+		"DiscordMaxChars": 500,
 		"DiscordMaxCharsUsernames": 25,
 		"DiscordDisabledHooks": [],
 		"DiscordDisabledNS": [],
@@ -56,8 +56,16 @@
 	"MessagesDirs": {
 		"mw-discord": "i18n"
 	},
+	"HookHandlers": {
+		"page-change": {
+			"class": "MediaWiki\\Extension\\NovaDiscord\\PageChangeAlert",
+			"services": [
+				"HttpRequestFactory", "RevisionLookup", "TitleFactory", "UrlUtils", "UserFactory"
+			]
+		}
+	},
 	"Hooks": {
-		"PageSaveComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onPageSaveComplete",
+		"PageSaveComplete": "page-change",
 		"PageDeleteComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onPageDeleteComplete",
 		"ArticleUndelete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleUndelete",
 		"ArticleRevisionVisibilitySet": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleRevisionVisibilitySet",

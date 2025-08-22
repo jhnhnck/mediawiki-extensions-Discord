@@ -29,58 +29,6 @@ use MediaWiki\User\UserIdentity;
  */
 class DiscordHooks {
     /**
-     * Called when a page is created or edited
-     * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageSaveComplete
-     */
-    public static function onPageSaveComplete(WikiPage $wikiPage, UserIdentity $userIdentity, string $summary, int $flags, RevisionRecord $revision, EditResult $editResult): bool {
-        global $wgDiscordNoBots, $wgDiscordNoMinor, $wgDiscordNoNull;
-        $hookName = 'PageSaveComplete';
-        $user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity($userIdentity);
-
-        if (DiscordUtils::isDisabled($hookName, $wikiPage->getTitle()->getNamespace(), $user)) {
-            return true;
-        }
-
-        if ($wgDiscordNoBots && $user->isBot()) {
-            // Don't continue, this is a bot edit
-            return true;
-        }
-
-        if ($wgDiscordNoMinor && $revision->isMinor()) {
-            // Don't continue, this is a minor edit
-            return true;
-        }
-
-        if ($wgDiscordNoNull && $editResult->isNullEdit()) {
-            // Don't continue, this is a null edit
-            return true;
-        }
-
-        $isNew = $editResult->isNew();
-        if ($wikiPage->getTitle()->inNamespace(NS_FILE) && $isNew) {
-            // Don't continue, it's a new file which onUploadComplete will handle instead
-            return true;
-        }
-
-        $msgKey = 'discord-edit';
-        if ($isNew) { // is a new page
-            $msgKey = 'discord-create';
-        }
-
-        $msg = wfMessage(
-            $msgKey,
-            DiscordUtils::createUserLinks($user),
-            DiscordUtils::createMarkdownLink($wikiPage->getTitle(), $wikiPage->getTitle()->getFullURL('', false, PROTO_CANONICAL)),
-            DiscordUtils::createRevisionText($revision),
-            ($summary ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($summary)) . '`') : '')
-        )->inContentLanguage()->plain();
-
-        wfDebugLog('nova-discord', 'Attempting to handle ' . $hookName . ': ' . $msg);
-        DiscordUtils::handleDiscord($hookName, $msg);
-        return true;
-    }
-
-    /**
      * Called when a page is deleted
      * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageDeleteComplete
      */
