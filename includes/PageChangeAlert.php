@@ -41,15 +41,15 @@ class PageChangeAlert extends DiscordAlert implements PageSaveCompleteHook {
         $hookName = 'PageSaveComplete';
 
         $user = $this->userFactory->newFromUserIdentity($userIdentity);
-        global $wgDiscordNoBots, $wgDiscordNoMinor, $wgDiscordNoNull;
+        global $wgDiscordNoMinor, $wgDiscordNoNull;
 
         // check if hook is enabled
         if (!$this->isEnabled($hookName, $wikiPage->getTitle()->getNamespace(), $user)) {
             return;
         }
 
-        // filter out bot/minor/null edits if configured
-        if (($wgDiscordNoBots && $user->isBot()) || ($wgDiscordNoMinor && $revision->isMinor()) || ($wgDiscordNoNull && $editResult->isNullEdit())) {
+        // filter out minor/null edits if configured
+        if (($wgDiscordNoMinor && $revision->isMinor()) || ($wgDiscordNoNull && $editResult->isNullEdit())) {
             return;
         }
 

@@ -71,7 +71,11 @@ abstract class DiscordAlert {
 
     // checks if alert should be sent
     protected function isEnabled(string $hookName, int $namespace, User $user): bool {
-        global $wgDiscordWebhookURL, $wgDiscordDisabledHooks, $wgDiscordDisabledNS, $wgDiscordDisabledUsers;
+        global $wgDiscordNoBots, $wgDiscordWebhookURL, $wgDiscordDisabledHooks, $wgDiscordDisabledNS, $wgDiscordDisabledUsers;
+
+        if ($wgDiscordNoBots && $user->isBot()) {
+            return false;
+        }
 
         if (!is_string($wgDiscordWebhookURL) && !is_array($wgDiscordWebhookURL)) {
             wfDebugLog('nova-discord', '$wgDiscordWebhookURL invalid; all alerts disabled');
