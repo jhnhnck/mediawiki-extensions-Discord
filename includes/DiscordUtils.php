@@ -164,13 +164,6 @@ class DiscordUtils {
     }
 
     /**
-     * Strip bad characters from a URL
-     */
-    public static function encodeURL($url) {
-        return urlencode($url);
-    }
-
-    /**
      * Creates formatted text for a specific Revision object
      */
     public static function createRevisionText($revision) {
@@ -243,6 +236,6 @@ class DiscordUtils {
 
     // sanitize text input (may need improvement)
     public static function sanitizeText(string $text): string {
-        return addcslashes($text, '(`|@)');
+        return addcslashes($text, '`@');
     }
 }
