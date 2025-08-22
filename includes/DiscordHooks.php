@@ -29,37 +29,6 @@ use MediaWiki\User\UserIdentity;
  */
 class DiscordHooks {
     /**
-     * Called when a page is deleted
-     * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageDeleteComplete
-     */
-    public static function onPageDeleteComplete(ProperPageIdentity $page, Authority $deleter, string $reason, int $pageID, RevisionRecord $deletedRev, ManualLogEntry $logEntry, int $archivedRevisionCount) {
-        global $wgDiscordNoBots;
-        $hookName = 'PageDeleteComplete';
-
-        $user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity($deleter->getUser());
-        $page = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle($page);
-
-        if (DiscordUtils::isDisabled($hookName, $page->getNamespace(), $user)) {
-            return true;
-        }
-
-        if ($wgDiscordNoBots && $user->isBot()) {
-            // Don't continue, this is a bot change
-            return true;
-        }
-
-        $msg = wfMessage(
-            'discord-articledelete',
-            DiscordUtils::createUserLinks($user),
-            DiscordUtils::createMarkdownLink($page->getTitle(), $page->getTitle()->getFullURL('', false, PROTO_CANONICAL)),
-            ($reason ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($reason)) . '`') : ''),
-            $archivedRevisionCount
-        )->inContentLanguage()->plain();
-        DiscordUtils::handleDiscord($hookName, $msg);
-        return true;
-    }
-
-    /**
      * Called when a page's revisions are restored
      * @see https://www.mediawiki.org/wiki/Manual:Hooks/ArticleUndelete
      */
