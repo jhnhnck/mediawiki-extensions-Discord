@@ -5,7 +5,7 @@
 		"[https://github.com/jhnhnck John Hancock]"
 	],
 	"url": "https://github.com/jhnhnck/mediawiki-extensions-Discord",
-	"version": "2.0.0",
+	"version": "2.0.2-alpha",
 	"descriptionmsg": "discord-desc",
 	"license-name": "MIT",
 	"requires": {
@@ -67,7 +67,7 @@
             "class": "MediaWiki\\Extension\\NovaDiscord\\PageDeleteAlert",
             "services": [
                 "HttpRequestFactory", "RevisionLookup", "TitleFactory", "UrlUtils", "UserFactory", "WikiPageFactory"
-			]
+            ]
         }
 	},
 	"Hooks": {
