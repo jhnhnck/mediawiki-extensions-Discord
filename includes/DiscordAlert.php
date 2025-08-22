@@ -125,7 +125,7 @@ abstract class DiscordAlert {
         $invalidChars = '';
 
         // TODO: Is this even an option to care about supporting?
-        if (!$wgDiscordSuppressPreviews) {
+        if ($wgDiscordSuppressPreviews) {
             return "[" . $text . "]" . '(<' . addcslashes($url, $invalidChars) . '>)';
         } else {
             return "[" . $text . "]" . '(' . addcslashes($url, $invalidChars) . ')';
