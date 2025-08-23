@@ -151,8 +151,8 @@ abstract class DiscordAlert {
         return wfMessage(
             'discord-userlinks',
             $this->formatMarkdownLink($userLabel, $userLink),
+            $this->formatMarkdownLink($talkLabel, $talkLink),
             $this->formatMarkdownLink($contribLabel, $contribLink),
-            $this->formatMarkdownLink($talkLabel, $talkLink)
         )->inContentLanguage()->text();
     }
 
