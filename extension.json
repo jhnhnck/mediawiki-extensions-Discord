@@ -57,22 +57,16 @@
 		"mw-discord": "i18n"
 	},
 	"HookHandlers": {
-		"PageSaveAlert": {
-			"class": "MediaWiki\\Extension\\NovaDiscord\\PageSaveAlert",
+		"PageAlert": {
+			"class": "MediaWiki\\Extension\\NovaDiscord\\PageAlert",
 			"services": [
-				"HttpRequestFactory", "RevisionLookup", "TitleFactory", "UrlUtils", "UserFactory"
+				"HttpRequestFactory", "RevisionLookup", "TitleFactory", "UrlUtils", "UserFactory", "WikiPageFactory"
 			]
-		},
-        "PageDeleteAlert": {
-            "class": "MediaWiki\\Extension\\NovaDiscord\\PageDeleteAlert",
-            "services": [
-                "HttpRequestFactory", "RevisionLookup", "TitleFactory", "UrlUtils", "UserFactory", "WikiPageFactory"
-            ]
-        }
+		}
 	},
 	"Hooks": {
-		"PageSaveComplete": "PageSaveAlert",
-		"PageDeleteComplete": "PageDeleteAlert",
+		"PageSaveComplete": "PageAlert",
+		"PageDeleteComplete": "PageAlert",
 		"ArticleUndelete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleUndelete",
 		"ArticleRevisionVisibilitySet": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleRevisionVisibilitySet",
 		"ArticleProtectComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleProtectComplete",

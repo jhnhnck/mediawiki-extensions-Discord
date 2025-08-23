@@ -7,30 +7,43 @@
 namespace MediaWiki\Extension\NovaDiscord;
 
 use MediaWiki\Http\HttpRequestFactory;
-use MediaWiki\Page\WikiPage;
 use MediaWiki\Revision\RevisionLookup;
-use MediaWiki\Revision\RevisionRecord;
-use MediaWiki\Storage\EditResult;
-use MediaWiki\Storage\Hook\PageSaveCompleteHook;
 use MediaWiki\Title\TitleFactory;
-use MediaWiki\User\UserFactory;
-use MediaWiki\User\UserIdentity;
 use MediaWiki\Utils\UrlUtils;
 
-class PageSaveAlert extends DiscordAlert implements PageSaveCompleteHook {
+use MediaWiki\Storage\Hook\PageSaveCompleteHook;
+use MediaWiki\Page\WikiPage;
+use MediaWiki\User\UserIdentity;
+use MediaWiki\Revision\RevisionRecord;
+use MediaWiki\Storage\EditResult;
+use MediaWiki\User\UserFactory;
+
+use MediaWiki\Page\Hook\PageDeleteCompleteHook;
+use MediaWiki\Logging\ManualLogEntry;
+use MediaWiki\Page\ProperPageIdentity;
+use MediaWiki\Page\WikiPageFactory;
+use MediaWiki\Permissions\Authority;
+
+class PageSaveAlert extends DiscordAlert implements PageSaveCompleteHook, PageDeleteCompleteHook {
     private UserFactory $userFactory;
+    private WikiPageFactory $pageFactory;
 
     public function __construct(HttpRequestFactory $httpFactory, RevisionLookup $revLookup,
-                                TitleFactory $titleFactory, UrlUtils $urlUtils, UserFactory $userFactory) {
+                                TitleFactory $titleFactory, UrlUtils $urlUtils, UserFactory $userFactory, WikiPageFactory $pageFactory) {
         $this->userFactory = $userFactory;
+        $this->pageFactory = $pageFactory;
 
         parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils);
     }
 
-    /** @inheritDoc */
+
+    /**
+     * Stub function because hook definition doesn't allow types yet
+     * @inheritDoc
+     */
     public function onPageSaveComplete($wikiPage, $userIdentity, $summary, $flags, $revision, $editResult) {
         $this->handleSaveComplete($wikiPage, $userIdentity, (string)$summary, (int)$flags, $revision, $editResult);
-    }
+        }
 
     /**
      * Called when a page is created or edited
@@ -67,5 +80,32 @@ class PageSaveAlert extends DiscordAlert implements PageSaveCompleteHook {
         )->inContentLanguage()->plain();
 
         $this->sendAlert($hookName, $msg);
+    }
+
+    /**
+     * Called when a page is deleted
+     * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageDeleteComplete
+     */
+    public function onPageDeleteComplete(ProperPageIdentity $page, Authority $deleter, string $reason, int $pageID, RevisionRecord $deletedRev, ManualLogEntry $logEntry, int $archivedRevisionCount): void {
+        $hookName = 'PageDeleteComplete';
+        wfDebugLog('nova-discord', 'Completing hook ' . $hookName . ' with on ' . $page);
+
+        // TODO: possible to remove this Title call?
+        $user = $this->userFactory->newFromUserIdentity($deleter->getUser());
+        $page = $this->pageFactory->newFromTitle($page);
+
+        if (!$this->isEnabled($hookName, $page->getNamespace(), $user)) {
+            return;
+        }
+
+        $msg = wfMessage(
+            'discord-articledelete',
+            $this->formatUserLink($user),
+            $this->formatMarkdownLink($page->getTitle(), $page->getTitle()->getCanonicalURL()),
+            $this->formatMessage($reason),
+            $archivedRevisionCount
+        )->inContentLanguage()->plain();
+        DiscordUtils::handleDiscord($hookName, $msg);
+        return;
     }
 }
