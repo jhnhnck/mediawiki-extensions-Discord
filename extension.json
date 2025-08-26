@@ -2,13 +2,13 @@
 	"name": "NovaDiscord",
 	"author": [
 		"[https://github.com/jayktaylor Jayden Bailey]",
-		"[https://github.com/jhnhnck John Hancock]"
-	],
-	"url": "https://github.com/jhnhnck/mediawiki-extensions-Discord",
-	"version": "2.0.3-alpha",
-	"descriptionmsg": "discord-desc",
-	"license-name": "MIT",
-	"requires": {
+        "[https://github.com/jhnhnck John Hancock]"
+    ],
+    "url": "https://github.com/jhnhnck/mediawiki-extensions-Discord",
+    "version": "2.0.4-alpha",
+    "descriptionmsg": "discord-desc",
+    "license-name": "MIT",
+    "requires": {
 		"MediaWiki": ">= 1.44.0"
 	},
 	"manifest_version": 1,
