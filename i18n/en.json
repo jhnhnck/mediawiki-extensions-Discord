@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Jayden Bailey"
+			"Jayden Bailey",
+            "John Hancock"
 		]
 	},
 	"discord-desc": "Sends messages to a Discord channel when certain events occur",
@@ -30,7 +31,7 @@
 	"discord-filedeletecomplete": "$1 deleted a version of file $2 $3",
 	"discord-fileundeletecomplete": "$1 restored some versions of file $2 $3",
 	"discord-afterimportpage": "$1 imported $2 (imported $4/$3 revisions)",
-	"discord-timestampformat": "**H:i e:**",
+	"discord-timestampformat": "<t:$1:T>",
 	"discord-articlemergecomplete": "$1 merged revisions from $2 into $3",
 	"discord-approvedrevsrevisionapproved": "$1 approved a new revision of $2 (revision $3) from user $4",
 	"discord-approvedrevsrevisionunapproved": "$1 unapproved the approved revision for $2",

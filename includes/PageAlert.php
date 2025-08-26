@@ -24,7 +24,7 @@ use MediaWiki\Page\ProperPageIdentity;
 use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Permissions\Authority;
 
-class PageSaveAlert extends DiscordAlert implements PageSaveCompleteHook, PageDeleteCompleteHook {
+class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDeleteCompleteHook {
     private UserFactory $userFactory;
     private WikiPageFactory $pageFactory;
 
@@ -79,7 +79,7 @@ class PageSaveAlert extends DiscordAlert implements PageSaveCompleteHook, PageDe
             $this->formatMessage($summary),
         )->inContentLanguage()->plain();
 
-        $this->sendAlert($hookName, $msg);
+        $this->sendAlert($hookName, $msg, $revision->getTimestamp());
     }
 
     /**
@@ -105,7 +105,7 @@ class PageSaveAlert extends DiscordAlert implements PageSaveCompleteHook, PageDe
             $this->formatMessage($reason),
             $archivedRevisionCount
         )->inContentLanguage()->plain();
-        DiscordUtils::handleDiscord($hookName, $msg);
-        return;
+
+        $this->sendAlert($hookName, $msg, $deletedRev->getTimestamp());
     }
 }

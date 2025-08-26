@@ -4,7 +4,8 @@
 			"Abijeet Patro",
 			"Amire80",
 			"Jayden",
-			"Jayden Bailey"
+			"Jayden Bailey",
+            "John Hancock"
 		]
 	},
 	"discord-desc": "The description used for the Discord extension",
@@ -33,7 +34,7 @@
 	"discord-filedeletecomplete": "Message sent to Discord when a file version is deleted (not an entire file).\nParameters:\n* $1 - discord-userlinks\n* $2 - File link\n* $3 - Comment (always surrounded in tildes)",
 	"discord-fileundeletecomplete": "Message sent to Discord when a file version is restored (not an entire file).\nParameters:\n* $1 - discord-userlinks\n* $2 - File link\n* $3 - Comment (always surrounded in tildes)",
 	"discord-afterimportpage": "Message sent to Discord when a page is imported. Parameters:\n* $1 - discord-userlinks\n* $2 - Page link\n* $3 - Number of revisions in XML file\n* $4 - Number of revisions successfully imported",
-	"discord-timestampformat": "{{optional}}\n\nThe formatting used in the gmdate() function for displaying the time an event happened in UTC.\n\nSee also: https://www.php.net/manual/en/datetime.format.php",
+	"discord-timestampformat": "{{optional}}\n\nTimestamp format using Discord's dynamic timestamp syntax. Discord will automatically render this in each user's local timezone for accurate event timing. It should not need to be localized.\nParameters:\n\n* $1 - Unix timestamp in UTC",
 	"discord-articlemergecomplete": "Message sent to Discord when page histories are merged. Parameters:\n* $1 - discord-userlinks\n* $2 - Target link\n* $3 - Destination link",
 	"discord-approvedrevsrevisionapproved": "Message sent to Discord when a revision is approved (Approved Revs extension).\nParameters:\n* $1 - discord-userlinks (admin user)\n* $2 - Target link\n* $3 - Revision link or ID\n* $4 - discord-userlinks (revision author) or ID",
 	"discord-approvedrevsrevisionunapproved": "Message sent to Discord when a revision is unapproved (Approved Revs extension).\nParameters:\n* $1 - discord-userlinks (admin user)\n* $2 - Target link",

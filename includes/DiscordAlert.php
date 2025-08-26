@@ -12,6 +12,7 @@ use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\User;
+use MediaWiki\Utils\MWTimestamp;
 use MediaWiki\Utils\UrlUtils;
 use MessageLocalizer;
 
@@ -29,7 +30,7 @@ abstract class DiscordAlert {
     }
 
     // handles sending a webhook to Discord
-    protected function sendAlert(string $hookName, string $msg): void {
+    protected function sendAlert(string $hookName, string $msg, int $timestamp): void {
         wfDebugLog('nova-discord', 'Triggering discord webhook with ' . $hookName . ' and ' . $msg);
 
         global $wgDiscordWebhookURL, $wgDiscordEmojis, $wgDiscordUseEmojis, $wgDiscordPrependTimestamp;
@@ -38,7 +39,8 @@ abstract class DiscordAlert {
 
         // add timestamp
         if ($wgDiscordPrependTimestamp) {
-            $dateString = gmdate(wfMessage('discord-timestampformat')->inContentLanguage()->text());
+            $unixTime = MWTimestamp::convert(TS_UNIX, $timestamp) ?: time();
+            $dateString = wfMessage('discord-timestampformat', $unixTime)->inContentLanguage()->text();
             $stripped = $dateString . ' ' . $stripped;
         }
 

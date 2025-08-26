@@ -27,7 +27,6 @@
 	"discord-filedeletecomplete": "$1 избриша верзија на податотека $2 $3",
 	"discord-fileundeletecomplete": "$1 поврати некои верзии на податотека $2 $3",
 	"discord-afterimportpage": "$1 увезе $2 (увезени $4/$3 преработки)",
-	"discord-timestampformat": "**G:i ч. e:**",
 	"discord-articlemergecomplete": "$1 спои преработки од $2 во $3",
 	"discord-approvedrevsrevisionapproved": "$1 одобри нова преработка на $2 (преработка $3) од корисникот $4",
 	"discord-approvedrevsrevisionunapproved": "$1 тргна одобрение од одобрената преработка за $2",

@@ -56,6 +56,13 @@ These parameters aren't required for the extension to work.
 | `$wgDiscordUseEmojis` | bool | Prepend emojis to different types of messages to help distinguish them | `false`
 | `$wgDiscordEmojis` | string associative array | Map of hook names and their associated emojis to prepend to messages if `$wgDiscordUseEmojis` is enabled | See [extension.json](/extension.json#L30)
 
+## Compatibility
+
+For now, compatibility with the original extension has been kept for the most part, any differences will be listed below.
+
+- `$wgDiscordMaxChars`: Default changed to `500` characters as a temporary bug fix for avoiding issues with the total webhook max length.
+- `discord-timestampformat`: Format string changed to use Discord's built-in timestamp support
+
 ## Hooks used
 - `PageSaveComplete` - New edits to pages and page creations
 - `PageDeleteComplete` - Page deletions
