@@ -60,7 +60,7 @@ class DiscordUtils {
     /**
      * Handles sending a webhook to Discord using cURL
      */
-    public static function handleDiscord($hookName, $msg) {
+    public static function handleDiscord($hookName, $msg, $timestamp=null) {
         wfDebugLog('nova-discord', 'Attempting to handle ' . $hookName . ': ' . $msg);
 
         global $wgDiscordWebhookURL, $wgDiscordEmojis, $wgDiscordUseEmojis, $wgDiscordPrependTimestamp;
@@ -84,9 +84,10 @@ class DiscordUtils {
         // Strip whitespace to just one space
         $stripped = preg_replace('/\s+/', ' ', $msg);
 
+        // add timestamp
         if ($wgDiscordPrependTimestamp) {
-            // Add timestamp
-            $dateString = gmdate(wfMessage('discord-timestampformat')->inContentLanguage()->text());
+            $unixTime = MWTimestamp::convert(TS_UNIX, $timestamp) ?: time();
+            $dateString = wfMessage('discord-timestampformat', $unixTime)->inContentLanguage()->text();
             $stripped = $dateString . ' ' . $stripped;
         }
 
