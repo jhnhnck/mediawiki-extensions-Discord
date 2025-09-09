@@ -4,6 +4,8 @@
 		<exclude name="MediaWiki.WhiteSpace.SpaceyParenthesis"/>
 		<exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
 		<exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing"/>
+        <exclude name="MediaWiki.Commenting.FunctionComment.WrongStyle"/>
+        <exclude name="MediaWiki.WhiteSpace.SpaceBeforeSingleLineComment.NewLineComment"/>
 	</rule>
 	<file>.</file>
     <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>

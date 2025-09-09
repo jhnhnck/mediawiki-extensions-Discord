@@ -197,9 +197,9 @@ class DiscordUtils {
             $size .= wfMessage('discord-size', sprintf("%d", $revision->getSize()))->inContentLanguage()->text();
         }
 
-		$text = wfMessage('discord-revisionlinks', $diff, $minor, $size)->inContentLanguage()->text();
-		return $text;
-	}
+        $text = wfMessage('discord-revisionlinks', $diff, $minor, $size)->inContentLanguage()->text();
+        return $text;
+    }
 
     // escape characters for markdown urls
     public static function encodeURL($url) {

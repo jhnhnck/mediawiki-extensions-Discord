@@ -4,7 +4,7 @@ A modernized MediaWiki extension rewrite (wip) for sending notifications to a Di
 
 Multiple webhook URLs are supported, and messages will be delivered to all of them.
 
-Live demo: <https://attuproject.org> ([Discord](https://links.attuproject.org/invite))
+Live demo: <https://attuproject.org> ([Discord](https://links.attuproject.org/invite)|[Config](/jhnhnck/attu-wiki))
 
 <!-- TODO: new example image
 <p align="center">

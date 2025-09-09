@@ -14,7 +14,6 @@ use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\User;
 use MediaWiki\Utils\MWTimestamp;
 use MediaWiki\Utils\UrlUtils;
-use MessageLocalizer;
 
 abstract class DiscordAlert {
     private HttpRequestFactory $httpFactory;
@@ -22,7 +21,10 @@ abstract class DiscordAlert {
     private TitleFactory $titleFactory;
     private UrlUtils $urlUtils;
 
-    public function __construct(HttpRequestFactory $httpFactory, RevisionLookup $revLookup, TitleFactory $titleFactory, UrlUtils $urlUtils) {
+    public function __construct(HttpRequestFactory $httpFactory,
+                                RevisionLookup $revLookup,
+                                TitleFactory $titleFactory,
+                                UrlUtils $urlUtils) {
         $this->httpFactory = $httpFactory;
         $this->revLookup = $revLookup;
         $this->titleFactory = $titleFactory;
@@ -41,13 +43,12 @@ abstract class DiscordAlert {
         if ($wgDiscordPrependTimestamp) {
             $unixTime = MWTimestamp::convert(TS_UNIX, $timestamp) ?: time();
             $dateString = wfMessage('discord-timestampformat', $unixTime)->inContentLanguage()->text();
-            $stripped = $dateString . ' ' . $stripped;
+            $stripped = "{$dateString} {$stripped}";
         }
 
         // add emoji
         if ($wgDiscordUseEmojis) {
-            $emoji = $wgDiscordEmojis[$hookName];
-            $stripped = $emoji . ' ' . $stripped;
+            $stripped = "{$wgDiscordEmojis[$hookName]} {$stripped}";
         }
 
         // webhook payload
@@ -67,13 +68,16 @@ abstract class DiscordAlert {
             // we don't care about if this succeeds, so no callback here
             $request->setHeader('Content-Type', 'application/json');
             $request->execute();
-
         }
     }
 
     // checks if alert should be sent
     protected function isEnabled(string $hookName, int $namespace, User $user): bool {
-        global $wgDiscordNoBots, $wgDiscordWebhookURL, $wgDiscordDisabledHooks, $wgDiscordDisabledNS, $wgDiscordDisabledUsers;
+        global $wgDiscordNoBots,
+            $wgDiscordWebhookURL,
+            $wgDiscordDisabledHooks,
+            $wgDiscordDisabledNS,
+            $wgDiscordDisabledUsers;
 
         if ($wgDiscordNoBots && $user->isBot()) {
             return false;
