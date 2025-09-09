@@ -109,6 +109,14 @@ As we use Namespace IDs, the following resources might be helpful:
 You can submit translations for this extension on [Translatewiki.net](https://translatewiki.net/wiki/Special:Translate/mwgithub-mw-discord).
 -->
 
+## Development
+
+### Running Test Cases
+
+```bash
+composer phpunit:entrypoint -- extensions/NovaDiscord
+```
+
 ## License
 
 This extension is available under the MIT license. You can [see here](LICENSE) for more information.

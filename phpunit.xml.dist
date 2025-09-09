@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="tests/bootstrap.php">
+    <testsuites>
+        <testsuite name="novadiscord-hooks-integration">
+            <directory>tests/phpunit/integration/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">includes</directory>
+        </whitelist>
+    </filter>
+    <php>
+       <var name="wgDiscordWebhookURL" value="https://placeholder.local/webhook/"/>
+    </php>
+</phpunit>
