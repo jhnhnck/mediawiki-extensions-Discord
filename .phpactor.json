@@ -1,0 +1,5 @@
+{
+  "language_server.diagnostic_ignore_codes": [
+    "worse.missing_return_type"
+  ]
+}
