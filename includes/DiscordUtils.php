@@ -138,8 +138,8 @@ class DiscordUtils {
             $user_abbr = strval($user);
 
             if ($wgDiscordMaxCharsUsernames) {
-                if (strlen($user_abbr) > $wgDiscordMaxCharsUsernames) {
-                    $user_abbr = substr($user_abbr, 0, $wgDiscordMaxCharsUsernames);
+                if (mb_strlen($user_abbr) > $wgDiscordMaxCharsUsernames) {
+                    $user_abbr = mb_substr($user_abbr, 0, $wgDiscordMaxCharsUsernames);
                     $user_abbr = $user_abbr . '...';
                 }
             }
@@ -227,8 +227,8 @@ class DiscordUtils {
     public static function truncateText($text) {
         global $wgDiscordMaxChars;
         if ($wgDiscordMaxChars) {
-            if (strlen($text) > $wgDiscordMaxChars) {
-                $text = substr($text, 0, $wgDiscordMaxChars);
+            if (mb_strlen($text) > $wgDiscordMaxChars) {
+                $text = mb_substr($text, 0, $wgDiscordMaxChars);
                 $text = $text . '...';
             }
         }

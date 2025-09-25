@@ -5,7 +5,7 @@
         "[https://github.com/jhnhnck John Hancock]"
     ],
     "url": "https://github.com/jhnhnck/mediawiki-extensions-NovaDiscord",
-    "version": "2.0.4-alpha",
+    "version": "2.0.5-alpha",
     "descriptionmsg": "discord-desc",
     "license-name": "MIT",
     "requires": {

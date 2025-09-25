@@ -115,8 +115,8 @@ abstract class DiscordAlert {
     /* --- Util Functions --- */
 
     protected static function truncateString(string $text, int $length): string {
-        if (is_int($length) && $length > 0 && strlen($text) > $length) {
-            return substr($text, 0, $length) . '...';
+        if (is_int($length) && $length > 0 && mb_strlen($text) > $length) {
+            return mb_substr($text, 0, $length) . '...';
         }
 
         return $text;
@@ -167,7 +167,7 @@ abstract class DiscordAlert {
         // TODO: adjust as needed
         $invalidChars = '`@';
 
-        if (strlen($message ?? '') == 0) {
+        if (mb_strlen($message ?? '') == 0) {
             return '';
         }
 
