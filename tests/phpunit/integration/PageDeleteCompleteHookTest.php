@@ -25,6 +25,7 @@ class PageDeleteCompleteHookTest extends NovaDiscordIntegrationTestCase {
         // delete page
         $user = $this->getTestUser();
         $this->deletePage($page, 'Deleted page', $user->getAuthority());
+        $this->assertFalse($page->exists(), 'Page should be deleted successfully');
 
         // Build expected payload
         $username = $user->getUser()->getName();
