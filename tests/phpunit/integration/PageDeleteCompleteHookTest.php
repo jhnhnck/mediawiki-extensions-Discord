@@ -34,7 +34,7 @@ class PageDeleteCompleteHookTest extends NovaDiscordIntegrationTestCase {
 
         // verify webhook payload
         $payload = $this->mockHttpFactory->getCaptured()[0];
-        $this->assertNotNull($payload, 'Webhook payload should be captured on page edit');
-        $this->assertEquals($expectedPayload, $payload['options']['postData'], 'Webhook payload for page edit should match expected output');
+        $this->assertNotNull($payload, 'Webhook payload should be captured on page delete');
+        $this->assertEquals($expectedPayload, $payload['options']['postData'], 'Webhook payload for page delete should match expected output');
     }
 }
