@@ -23,7 +23,7 @@ class PageSaveCompleteHookTest extends NovaDiscordIntegrationTestCase {
         );
         $this->assertTrue($status->isOK(), 'Page should be created successfully');
 
-        // Build expected payload
+        // build expected payload
         $username = $user->getUser()->getName();
         $userScored = str_replace(' ', '_', $username);
         $expectedPayload = '{"content":"[' . $username . '](<https:\/\/dev.attuproject.org\/wiki\/User:' . $userScored . '>) ([t](<https:\/\/dev.attuproject.org\/wiki\/User_talk:' . $userScored . '>)|[c](<https:\/\/dev.attuproject.org\/wiki\/Special:Contributions\/' . $userScored . '>)) created [NovaTestPageCreate](<https:\/\/dev.attuproject.org\/wiki\/NovaTestPageCreate>) ([diff](<https:\/\/dev.attuproject.org\/index.php?title=NovaTestPageCreate&diff=prev&oldid=1>)) (45) `Created page`","allowed_mentions":{"parse":[]}}';
@@ -51,7 +51,7 @@ class PageSaveCompleteHookTest extends NovaDiscordIntegrationTestCase {
         );
         $this->assertTrue($status->isOK(), 'Page should be edited successfully');
 
-        // Build expected payload
+        // build expected payload
         $username = $user->getUser()->getName();
         $userScored = str_replace(' ', '_', $username);
         $expectedPayload = '{"content":"[' . $username . '](<https:\/\/dev.attuproject.org\/wiki\/User:' . $userScored . '>) ([t](<https:\/\/dev.attuproject.org\/wiki\/User_talk:' . $userScored . '>)|[c](<https:\/\/dev.attuproject.org\/wiki\/Special:Contributions\/' . $userScored . '>)) edited [NovaTestPageEdit](<https:\/\/dev.attuproject.org\/wiki\/NovaTestPageEdit>) ([diff](<https:\/\/dev.attuproject.org\/index.php?title=NovaTestPageEdit&diff=prev&oldid=2>)) (+44) `Added content`","allowed_mentions":{"parse":[]}}';

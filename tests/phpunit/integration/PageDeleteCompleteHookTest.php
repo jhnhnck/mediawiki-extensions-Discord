@@ -27,7 +27,7 @@ class PageDeleteCompleteHookTest extends NovaDiscordIntegrationTestCase {
         $this->deletePage($page, 'Deleted page', $user->getAuthority());
         $this->assertFalse($page->exists(), 'Page should be deleted successfully');
 
-        // Build expected payload
+        // build expected payload
         $username = $user->getUser()->getName();
         $userScored = str_replace(' ', '_', $username);
         $expectedPayload = '{"content":"[' . $username . '](<https:\/\/dev.attuproject.org\/wiki\/User:' . $userScored . '>) ([t](<https:\/\/dev.attuproject.org\/wiki\/User_talk:' . $userScored . '>)|[c](<https:\/\/dev.attuproject.org\/wiki\/Special:Contributions\/' . $userScored . '>)) deleted [NovaTestPageDelete](<https:\/\/dev.attuproject.org\/wiki\/NovaTestPageDelete>) `Deleted page` (1 revisions deleted)","allowed_mentions":{"parse":[]}}';
