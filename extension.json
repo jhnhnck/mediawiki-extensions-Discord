@@ -5,7 +5,7 @@
         "[https://github.com/jhnhnck John Hancock]"
     ],
     "url": "https://github.com/jhnhnck/mediawiki-extensions-NovaDiscord",
-    "version": "2.0.5-alpha",
+    "version": "2.0.6",
     "descriptionmsg": "discord-desc",
     "license-name": "MIT",
     "requires": {
@@ -74,12 +74,12 @@
         }
     },
     "Hooks": {
-        "PageSaveComplete": "PageAlert",
         "PageDeleteComplete": "PageAlert",
+        "PageMoveComplete": "PageAlert",
+        "PageSaveComplete": "PageAlert",
         "ArticleUndelete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleUndelete",
         "ArticleRevisionVisibilitySet": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleRevisionVisibilitySet",
         "ArticleProtectComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleProtectComplete",
-        "PageMoveComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onPageMoveComplete",
         "LocalUserCreated": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onLocalUserCreated",
         "BlockIpComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onBlockIpComplete",
         "UnblockUserComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onUnblockUserComplete",

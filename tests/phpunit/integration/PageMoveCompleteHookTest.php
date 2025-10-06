@@ -8,7 +8,7 @@ namespace MediaWiki\Extension\NovaDiscord\Tests\Integration;
 
 /**
  * @group Database
- * @covers MediaWiki\Extension\NovaDiscord\DiscordHooks::onPageMoveComplete
+ * @covers MediaWiki\Extension\NovaDiscord\PageAlert::onPageMoveComplete
  */
 class PageMoveCompleteHookTest extends NovaDiscordIntegrationTestCase {
     public function testPageMoveSendsWebhook(): void {
