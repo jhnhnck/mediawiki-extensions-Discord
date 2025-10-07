@@ -28,9 +28,9 @@ class PageMoveCompleteHookTest extends NovaDiscordIntegrationTestCase {
         $this->mockHttpFactory->reset();
 
         // move page
-        $user = $this->getTestUser();
+        $user = $this->getTestSysop();
         $pageMove = $movePageFactory->newMovePage($titleBefore, $titleAfter);
-        $status = $pageMove->move($user->getUserIdentity(), 'Moved page because reasons', false);
+        $status = $pageMove->moveIfAllowed($user->getAuthority(), 'Moved page because reasons', false);
         $this->assertTrue($status->isOK(), 'Page should be moved successfully');
 
         // build expected payload
