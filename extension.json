@@ -1,8 +1,8 @@
 {
     "name": "NovaDiscord",
     "author": [
-        "[https://github.com/jayktaylor Jayden Bailey]",
-        "[https://github.com/jhnhnck John Hancock]"
+        "[https://github.com/jhnhnck John Hancock]",
+        "[https://github.com/jayktaylor Jayden Bailey]"
     ],
     "url": "https://github.com/jhnhnck/mediawiki-extensions-NovaDiscord",
     "version": "2.0.6",
@@ -77,7 +77,7 @@
         "PageDeleteComplete": "PageAlert",
         "PageMoveComplete": "PageAlert",
         "PageSaveComplete": "PageAlert",
-        "ArticleUndelete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleUndelete",
+        "PageUndeleteComplete": "PageAlert",
         "ArticleRevisionVisibilitySet": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleRevisionVisibilitySet",
         "ArticleProtectComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleProtectComplete",
         "LocalUserCreated": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onLocalUserCreated",

@@ -66,15 +66,17 @@ For now, compatibility with the original extension has been kept for the most pa
 
 - `$wgDiscordMaxChars`: Default changed to `500` characters as a temporary bug fix for avoiding issues with the total webhook max length.
 - `discord-timestampformat`: Format string changed to use Discord's built-in timestamp support
+- `PageUndeleteComplete` is now used instead of the deprecated `ArticleUndelete` hook; may need to change config for `$wgDiscordEmojis` or `$wgDiscordDisabledHooks`
 
 ## Hooks used
 
-- `PageSaveComplete` - New edits to pages and page creations
 - `PageDeleteComplete` - Page deletions
-- `ArticleUndelete` - Page restorations
+- `PageMoveComplete` - Page moves
+- `PageSaveComplete` - New edits to pages and page creations
+- `PageUndeleteComplete` - Page restorations
+
 - `ArticleRevisionVisibilitySet` - Revision visibility changes
 - `ArticleProtectComplete` - Page protections
-- `PageMoveComplete` - Page moves
 - `LocalUserCreated` - User registrations
 - `BlockIpComplete` - User blocked
 - `UnblockUserComplete` - User unblocked

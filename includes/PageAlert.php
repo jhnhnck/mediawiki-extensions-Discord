@@ -10,6 +10,7 @@ use MediaWiki\Hook\PageMoveCompleteHook;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Logging\ManualLogEntry;
 use MediaWiki\Page\Hook\PageDeleteCompleteHook;
+use MediaWiki\Page\Hook\PageUndeleteCompleteHook;
 use MediaWiki\Page\ProperPageIdentity;
 use MediaWiki\Page\WikiPage;
 use MediaWiki\Page\WikiPageFactory;
@@ -24,7 +25,7 @@ use MediaWiki\User\UserIdentity;
 use MediaWiki\Utils\UrlUtils;
 use MediaWiki\Linker\LinkTarget;
 
-class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDeleteCompleteHook, PageMoveCompleteHook {
+class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDeleteCompleteHook, PageMoveCompleteHook, PageUndeleteCompleteHook {
     private UserFactory $userFactory;
     private WikiPageFactory $pageFactory;
 
@@ -159,5 +160,40 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
         )->inContentLanguage()->plain();
 
         $this->sendAlert($hookName, $msg, $revision->getTimestamp());
+    }
+
+    /**
+     * Occurs after the undelete page request has been processed
+     * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageUndeleteComplete
+     */
+	public function onPageUndeleteComplete(ProperPageIdentity $page,
+                                           Authority $restorer,
+                                           string $reason,
+                                           RevisionRecord $restoredRev,
+                                           ManualLogEntry $logEntry,
+                                           int $restoredRevisionCount,
+                                           bool $created,
+                                           array $restoredPageIds): void {
+        $hookName = 'PageUndeleteComplete';
+        wfDebugLog('nova-discord', 'Completing hook ' . $hookName . ' with on ' . $page);
+
+        $user = $this->userFactory->newFromUserIdentity($restorer->getUser());
+        $page = $this->pageFactory->newFromTitle($page);
+
+        // check if hook is enabled
+        if (!$this->isEnabled($hookName, $page->getNamespace(), $user)) {
+            return;
+        }
+
+        // TODO: we can also include $restoredRevisionCount here somewhere
+        $msg = wfMessage(
+            'discord-articleundelete',
+            $this->formatUserLink($user),
+            ($created ? '' : wfMessage('discord-undeleterev')->inContentLanguage()->text()),
+            $this->formatMarkdownLink($page->getTitle(), $page->getTitle()->getCanonicalURL()),
+            $this->formatMessage($reason),
+        )->inContentLanguage()->plain();
+
+        $this->sendAlert($hookName, $msg, $restoredRev->getTimestamp());
     }
 }

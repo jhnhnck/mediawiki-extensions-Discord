@@ -24,36 +24,6 @@ use MediaWiki\User\UserIdentity;
  */
 class DiscordHooks {
     /**
-     * Called when a page's revisions are restored
-     * @see https://www.mediawiki.org/wiki/Manual:Hooks/ArticleUndelete
-     */
-    public static function onArticleUndelete(Title $title, $create, $comment, $oldPageId, $restoredPages) {
-        global $wgDiscordNoBots;
-        $hookName = 'ArticleUndelete';
-
-        $user = RequestContext::getMain()->getUser();
-
-        if (DiscordUtils::isDisabled($hookName, $title->getNamespace(), $user)) {
-            return true;
-        }
-
-        if ($wgDiscordNoBots && $user->isBot()) {
-            // Don't continue, this is a bot change
-            return true;
-        }
-
-        $msg = wfMessage(
-            'discord-articleundelete',
-            DiscordUtils::createUserLinks($user),
-            ($create ? '' : wfMessage('discord-undeleterev')->inContentLanguage()->text()),
-            DiscordUtils::createMarkdownLink($title, $title->getFullURL('', false, PROTO_CANONICAL)),
-            ($comment ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($comment)) . '`') : '')
-        )->inContentLanguage()->plain();
-        DiscordUtils::handleDiscord($hookName, $msg);
-        return true;
-    }
-
-    /**
      * Called after committing revision visibility changes to the database
      * @see https://www.mediawiki.org/wiki/Manual:Hooks/ArticleRevisionVisibilitySet
      */
