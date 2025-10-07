@@ -79,7 +79,10 @@ abstract class DiscordAlert {
             $wgDiscordDisabledNS,
             $wgDiscordDisabledUsers;
 
-        if ($wgDiscordNoBots && $user->isBot()) {
+        // So this shows up in testing and not just when bots are disabled
+        if (!$user instanceof User) {
+            throw new InvalidArgumentException('$user must be of type User');
+        } elseif ($wgDiscordNoBots && $user->isBot()) {
             return false;
         }
 
