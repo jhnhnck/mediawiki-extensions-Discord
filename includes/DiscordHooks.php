@@ -81,36 +81,6 @@ class DiscordHooks {
     }
 
     /**
-     * Called when a page is moved
-     * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageMoveComplete
-     */
-    public static function onPageMoveComplete(LinkTarget $old, LinkTarget $new, UserIdentity $userIdentity, int $pageid, int $redirid, string $reason, RevisionRecord $revision) {
-        global $wgDiscordNoBots;
-        $hookName = 'TitleMoveComplete';
-        $user = MediaWikiServices::getInstance()->getUserFactory()->newFromUserIdentity($userIdentity);
-
-        if (DiscordUtils::isDisabled($hookName, $old->getNamespace(), $user)) {
-            return true;
-        }
-
-        if ($wgDiscordNoBots && $user->isBot()) {
-            // Don't continue, this is a bot change
-            return true;
-        }
-
-        $msg = wfMessage(
-            'discord-titlemove',
-            DiscordUtils::createUserLinks($user),
-            DiscordUtils::createMarkdownLink($old, Title::castFromLinkTarget($old)->getFullURL('', false, PROTO_CANONICAL)),
-            DiscordUtils::createMarkdownLink($new, Title::castFromLinkTarget($new)->getFullURL('', false, PROTO_CANONICAL)),
-            ($reason ? ('`' . DiscordUtils::sanitizeText(DiscordUtils::truncateText($reason)) . '`') : ''),
-            DiscordUtils::createRevisionText($revision)
-        )->inContentLanguage()->plain();
-        DiscordUtils::handleDiscord($hookName, $msg);
-        return true;
-    }
-
-    /**
      * Called when a user is created
      * @see https://www.mediawiki.org/wiki/Manual:Hooks/LocalUserCreated
      */
