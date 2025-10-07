@@ -12,7 +12,4 @@
             <directory suffix=".php">includes</directory>
         </whitelist>
     </filter>
-    <php>
-       <var name="wgDiscordWebhookURL" value="https://placeholder.local/webhook/"/>
-    </php>
 </phpunit>
