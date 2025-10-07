@@ -54,11 +54,11 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
      * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageSaveComplete
      */
     private function handlePageSave(WikiPage $wikiPage,
-                                        UserIdentity $userIdentity,
-                                        string $summary,
-                                        int $flags,
-                                        RevisionRecord $revision,
-                                        EditResult $editResult): void {
+                                    UserIdentity $userIdentity,
+                                    string $summary,
+                                    int $flags,
+                                    RevisionRecord $revision,
+                                    EditResult $editResult): void {
         $hookName = 'PageSaveComplete';
         wfDebugLog('nova-discord', 'Completing hook ' . $hookName . ' with on ' . $wikiPage);
 
@@ -136,7 +136,13 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
      * Called when a page is moved
      * @see https://www.mediawiki.org/wiki/Manual:Hooks/PageMoveComplete
      */
-    private function handlePageMove(LinkTarget $old, LinkTarget $new, UserIdentity $userIdentity, int $pageid, int $redirid, string $reason, RevisionRecord $revision): void {
+    private function handlePageMove(LinkTarget $old,
+                                    LinkTarget $new,
+                                    UserIdentity $userIdentity,
+                                    int $pageid,
+                                    int $redirid,
+                                    string $reason,
+                                    RevisionRecord $revision): void {
         $hookName = 'TitleMoveComplete';
         wfDebugLog('nova-discord', 'Completing hook ' . $hookName . ' with on ' . $old);
 
