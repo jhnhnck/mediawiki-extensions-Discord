@@ -37,7 +37,7 @@ class PageUndeleteCompleteHookTest extends NovaDiscordIntegrationTestCase {
         // build expected payload
         $username = $user->getUser()->getName();
         $userScored = str_replace(' ', '_', $username);
-        $expectedPayload = '{"content":"[' . $username . '](<https:\/\/dev.attuproject.org\/wiki\/User:' . $userScored . '>) ([t](<https:\/\/dev.attuproject.org\/wiki\/User_talk:' . $userScored . '>)|[c](<https:\/\/dev.attuproject.org\/wiki\/Special:Contributions\/' . $userScored . '>)) undeleted [NovaTestPageUndelete](<https:\/\/dev.attuproject.org\/wiki\/NovaTestPageUndelete>) `Undeleted page for test case`","allowed_mentions":{"parse":[]}}';
+        $expectedPayload = '{"content":"[' . $username . '](<https:\/\/novadiscord.local\/wiki\/User:' . $userScored . '>) ([t](<https:\/\/novadiscord.local\/wiki\/User_talk:' . $userScored . '>)|[c](<https:\/\/novadiscord.local\/wiki\/Special:Contributions\/' . $userScored . '>)) undeleted [NovaTestPageUndelete](<https:\/\/novadiscord.local\/wiki\/NovaTestPageUndelete>) `Undeleted page for test case`","allowed_mentions":{"parse":[]}}';
 
         // verify webhook payload
         $payload = $this->mockHttpFactory->getCaptured()[0];

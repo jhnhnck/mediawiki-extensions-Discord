@@ -8,7 +8,10 @@
         "phpunit/phpunit": "^12"
 	},
 	"scripts": {
-		"test": [
+        "test": [
+            "docker compose --file .dev/docker-compose.yml up --build --abort-on-container-exit --exit-code-from job-tests --attach job-tests --remove-orphans"
+        ],
+		"check": [
 			"parallel-lint . --exclude vendor --exclude node_modules",
 			"@phpcs",
 			"minus-x check ."

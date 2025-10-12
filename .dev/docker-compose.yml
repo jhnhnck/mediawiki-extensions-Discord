@@ -1,0 +1,29 @@
+---
+name: nova-discord
+services:
+    database:
+        environment:
+            - MARIADB_DATABASE=nova_wiki
+            - MARIADB_PASSWORD=TestPasswordDoNotReuse
+            - MARIADB_RANDOM_ROOT_PASSWORD=true
+            - MARIADB_USER=nova
+        healthcheck:
+            interval: 3s
+            retries: 5
+            start_period: 5s
+            test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+            timeout: 3s
+        image: mariadb:lts
+
+    job-tests:
+        build:
+            context: ../
+            dockerfile: .dev/Dockerfile
+        depends_on:
+            database:
+                condition: service_healthy
+        environment:
+            - NOVA_DB_PASSWORD=TestPasswordDoNotReuse
+            - NOVA_SECRET_KEY=8b245fd370cb9005961385ea867f01dbc09ca2d970547e628b64683f7e544f53
+            - NOVA_UPGRADE_KEY=oAk7YpgBGnv2k9m3fU
+            - NOVA_WEBHOOK_URL="https://example.webhook/api/36244f52-62fb-4d95-b964-3f8e288334c2"
