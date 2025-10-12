@@ -30,7 +30,7 @@
         "DiscordEmojis": {
             "PageSaveComplete": ":pencil2:",
             "PageDeleteComplete": ":wastebasket:",
-            "ArticleUndelete": ":wastebasket:",
+            "PageUndeleteComplete": ":wastebasket:",
             "ArticleRevisionVisibilitySet": ":spy:",
             "ArticleProtectComplete": ":lock:",
             "PageMoveComplete": ":truck:",
