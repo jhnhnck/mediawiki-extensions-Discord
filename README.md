@@ -113,11 +113,14 @@ You can submit translations for this extension on [Translatewiki.net](https://tr
 
 ### Running Test Cases
 
-*Sorry that these probably won't work for anyone else; just take my word for it for now that they pass.*
-*I will get to it eventually, but it is currently not a priority.*
+Requires `docker`; can also be ran with `composer test`
 
-```bash
-composer phpunit:entrypoint -- extensions/NovaDiscord
+```zsh
+docker compose --file .dev/docker-compose.yml up --build \
+    --abort-on-container-exit \
+    --exit-code-from job-tests \
+    --attach job-tests \
+    --remove-orphans
 ```
 
 ## License
