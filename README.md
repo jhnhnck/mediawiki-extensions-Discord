@@ -25,7 +25,7 @@ Live demo: <https://attuproject.org> ([Discord](https://links.attuproject.org/in
 1. Clone this repository to your MediaWiki installation's `extensions` folder:
 
 ```bash
-git clone --depth=1 https://github.com/jhnhnck/mediawiki-extensions-NovaDiscord ./extensions/NovaDiscord;
+git clone --depth=1 --branch 'REL1_44' https://github.com/jhnhnck/mediawiki-extensions-NovaDiscord ./extensions/NovaDiscord;
 ```
 
 1. Configure the extension within your `LocalSettings.php` file:
