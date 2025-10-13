@@ -1,8 +1,7 @@
 {
     "name": "NovaDiscord",
     "author": [
-        "[https://github.com/jhnhnck John Hancock]",
-        "[https://github.com/jayktaylor Jayden Bailey]"
+        "[https://github.com/jhnhnck John Hancock]"
     ],
     "url": "https://github.com/jhnhnck/mediawiki-extensions-NovaDiscord",
     "version": "2.0.8",
