@@ -70,6 +70,46 @@
                 "UserFactory",
                 "WikiPageFactory"
             ]
+        },
+        "UserAlert": {
+            "class": "MediaWiki\\Extension\\NovaDiscord\\UserAlert",
+            "services": [
+                "HttpRequestFactory",
+                "RevisionLookup",
+                "TitleFactory",
+                "UrlUtils",
+                "UserFactory"
+            ]
+        },
+        "ArticleAlert": {
+            "class": "MediaWiki\\Extension\\NovaDiscord\\ArticleAlert",
+            "services": [
+                "HttpRequestFactory",
+                "RevisionLookup",
+                "TitleFactory",
+                "UrlUtils",
+                "UserFactory"
+            ]
+        },
+        "FileAlert": {
+            "class": "MediaWiki\\Extension\\NovaDiscord\\FileAlert",
+            "services": [
+                "HttpRequestFactory",
+                "RevisionLookup",
+                "TitleFactory",
+                "UrlUtils",
+                "UserFactory"
+            ]
+        },
+        "ExtensionAlert": {
+            "class": "MediaWiki\\Extension\\NovaDiscord\\ExtensionAlert",
+            "services": [
+                "HttpRequestFactory",
+                "RevisionLookup",
+                "TitleFactory",
+                "UrlUtils",
+                "UserFactory"
+            ]
         }
     },
     "Hooks": {
@@ -77,21 +117,17 @@
         "PageMoveComplete": "PageAlert",
         "PageSaveComplete": "PageAlert",
         "PageUndeleteComplete": "PageAlert",
-        "ArticleRevisionVisibilitySet": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleRevisionVisibilitySet",
-        "ArticleProtectComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleProtectComplete",
-        "LocalUserCreated": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onLocalUserCreated",
-        "BlockIpComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onBlockIpComplete",
-        "UnblockUserComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onUnblockUserComplete",
-        "UserGroupsChanged": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onUserGroupsChanged",
-        "UploadComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onUploadComplete",
-        "FileDeleteComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onFileDeleteComplete",
-        "FileUndeleteComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onFileUndeleteComplete",
-        "AfterImportPage": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onAfterImportPage",
-        "ArticleMergeComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onArticleMergeComplete",
-        "ApprovedRevsRevisionApproved": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onApprovedRevsRevisionApproved",
-        "ApprovedRevsRevisionUnapproved": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onApprovedRevsRevisionUnapproved",
-        "ApprovedRevsFileRevisionApproved": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onApprovedRevsFileRevisionApproved",
-        "ApprovedRevsFileRevisionUnapproved": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onApprovedRevsFileRevisionUnapproved",
-        "RenameUserComplete": "MediaWiki\\Extension\\NovaDiscord\\DiscordHooks::onRenameUserComplete"
+        "ArticleRevisionVisibilitySet": "ArticleAlert",
+        "ArticleProtectComplete": "ArticleAlert",
+        "AfterImportPage": "ArticleAlert",
+        "ArticleMergeComplete": "ArticleAlert",
+        "LocalUserCreated": "UserAlert",
+        "BlockIpComplete": "UserAlert",
+        "UnblockUserComplete": "UserAlert",
+        "UserGroupsChanged": "UserAlert",
+        "UploadComplete": "FileAlert",
+        "FileDeleteComplete": "FileAlert",
+        "FileUndeleteComplete": "FileAlert",
+        "RenameUserComplete": "ExtensionAlert"
     }
 }

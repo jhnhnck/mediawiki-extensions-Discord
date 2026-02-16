@@ -1,6 +1,6 @@
 <?php
 /**
- * NovaDiscord - onPageSaveComplete Hook
+ * NovaDiscord - Page and Article Hooks (whatever the difference is idk)
  * This file is licensed under the MIT License; See LICENSE for full text.
  */
 
@@ -143,7 +143,7 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
                                     int $redirid,
                                     string $reason,
                                     RevisionRecord $revision): void {
-        $hookName = 'TitleMoveComplete';
+        $hookName = 'PageMoveComplete';
         wfDebugLog('nova-discord', 'Completing hook ' . $hookName . ' with on ' . $old);
 
         $user = $this->userFactory->newFromUserIdentity($userIdentity);

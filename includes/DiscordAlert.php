@@ -72,7 +72,7 @@ abstract class DiscordAlert {
     }
 
     // checks if alert should be sent
-    protected function isEnabled(string $hookName, int $namespace, User $user): bool {
+    protected function isEnabled(string $hookName, ?int $namespace, User $user): bool {
         global $wgDiscordNoBots,
             $wgDiscordWebhookURL,
             $wgDiscordDisabledHooks,
@@ -97,10 +97,12 @@ abstract class DiscordAlert {
             return false;
         }
 
-        if (!is_array($wgDiscordDisabledNS)) {
-            wfDebugLog('nova-discord', '$wgDiscordDisabledNS invalid; all namespaces enabled');
-        } elseif (in_array($namespace, $wgDiscordDisabledNS)) {
-            return false;
+        if ($namespace !== null) {
+            if (!is_array($wgDiscordDisabledNS)) {
+                wfDebugLog('nova-discord', '$wgDiscordDisabledNS invalid; all namespaces enabled');
+            } elseif (in_array($namespace, $wgDiscordDisabledNS)) {
+                return false;
+            }
         }
 
         if (!is_array($wgDiscordDisabledUsers)) {
@@ -123,6 +125,15 @@ abstract class DiscordAlert {
         }
 
         return $text;
+    }
+
+    protected static function formatBytes(int $bytes, int $precision = 2): string {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+        $bytes /= (1 << (10 * $pow));
+        return round($bytes, $precision) . ' ' . $units[$pow];
     }
 
     /**
