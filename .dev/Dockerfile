@@ -17,6 +17,8 @@ RUN --mount=type=cache,sharing=locked,target=/var/lib/apt \
         zsh; \
     bash -c 'mkdir -p $APP_HOME/{mediawiki,logs}';
 
+SHELL [ "/usr/bin/zsh", "-euc" ]
+
 # PHP extensions
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN --mount=type=cache,sharing=locked,target=/var/lib/apt \
@@ -32,25 +34,13 @@ RUN --mount=type=cache,sharing=locked,target=/var/lib/apt \
         zip;
 
 # php-fpm configuration tweaks
-RUN set -eu; \
-    printf '%s\n' \
+RUN printf '%s\n' \
         'error_reporting = E_ALL' \
         'log_errors = On' \
         'display_errors = On' \
-        'upload_max_filesize = 100M' \
-        'post_max_size = 100M' \
-        'max_execution_time = 60' \
-            >> /usr/local/etc/php/conf.d/php-config.ini; \
-    printf '%s\n' \
-        'pm.max_children = 30' \
-        'pm.max_requests = 200' \
-        'pm.start_servers = 10' \
-        'pm.min_spare_servers = 10' \
-        'pm.max_spare_servers = 30' \
-            >> /usr/local/etc/php-fpm.d/zz-docker.conf;
+        | tee -a /usr/local/etc/php/conf.d/php-config.ini;
 
-RUN set -eux; \
-    usermod -d $APP_HOME www-data; \
+RUN usermod -d $APP_HOME www-data; \
     chown -R www-data:www-data $APP_HOME; \
     chmod -R +220 $APP_HOME;
 
@@ -62,7 +52,6 @@ WORKDIR $APP_HOME/mediawiki
 
 # MediaWiki core and "included" extensions
 RUN --mount=type=cache,target=$APP_HOME/.cache/composer \
-    set -eux; \
     git clone --no-recurse-submodules --depth=1 --branch "$MEDIAWIKI_BRANCH" https://gerrit.wikimedia.org/r/mediawiki/core.git .; \
     git submodule update --init --recursive -- \
         skins/Vector; \

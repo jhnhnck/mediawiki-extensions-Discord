@@ -57,11 +57,6 @@ $wgAutoblockExemptions = ['172.16.0.0/12', '10.22.0.0/22'];
 $wgUseCdn = false;
 $wgShowExceptionDetails = true;
 
-# Roles
-$wgGroupPermissions['destroyer']['delete'] = true;
-# Uncomment to restrict account creation
-# $wgGroupPermissions['*']['createaccount'] = false;
-
 # Skins
 wfLoadSkin('Vector');
 
