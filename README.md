@@ -1,6 +1,6 @@
 # NovaDiscord
 
-A modernized MediaWiki extension rewrite (wip) for sending notifications to a Discord webhook from MediaWiki. When certain events occur on your wiki, such as new edits, alerts can be sent as messages to a Discord channel via a webhook.
+A modernized MediaWiki extension for sending notifications to a Discord webhook from MediaWiki. When certain events occur on your wiki, such as new edits, alerts can be sent as messages to a Discord channel via a webhook.
 
 Live demo: <https://attuproject.org> ([Discord](https://links.attuproject.org/invite)|[Config](/jhnhnck/attu-wiki))
 
@@ -40,7 +40,7 @@ $wgDiscordWebhookURL = ['https://discord.com/api/webhooks/...'];
 
 ## Configuration
 
-This extension can be configured using the `LocalSettings.php` file in your MediaWiki installation. Only `$wgDiscordWebhookURL` is required; all other setting are optional and used to customize the behavior.
+This extension can be configured using the `LocalSettings.php` file in your MediaWiki installation. Only `$wgDiscordWebhookURL` is required; all other settings are optional and used to customize the behavior.
 
 | Variable | Type | Description | Default |
 | --- | --- | --- | --- |
@@ -60,7 +60,7 @@ This extension can be configured using the `LocalSettings.php` file in your Medi
 
 ## Compatibility
 
-For now, compatibility with the original extension has been kept for the most part, any differences will be listed below.
+For now, compatibility with the original extension has been kept for the most part. Any differences will be listed below:
 
 - `$wgDiscordMaxChars`: Default changed to `500` characters as a temporary bug fix for avoiding issues with the total webhook max length
 - `discord-timestampformat`: Format string changed to use Discord's built-in timestamp support
@@ -72,7 +72,6 @@ For now, compatibility with the original extension has been kept for the most pa
 - `PageMoveComplete` - Page moves
 - `PageSaveComplete` - New edits to pages and page creations
 - `PageUndeleteComplete` - Page restorations
-
 - `AfterImportPage` - Page was imported
 - `ArticleMergeComplete` - Article histories were merged
 - `ArticleProtectComplete` - Page protections
@@ -106,7 +105,7 @@ You can submit translations for this extension on [Translatewiki.net](https://tr
 
 ### Running Test Cases
 
-Requires `docker`; can also be ran with `composer test`
+Run with `composer test` or the following if you don't have composer installed. (Docker required)
 
 ```zsh
 docker compose --file .dev/docker-compose.yml up --build \
@@ -115,6 +114,30 @@ docker compose --file .dev/docker-compose.yml up --build \
     --attach job-tests \
     --remove-orphans
 ```
+
+### Test Coverage
+
+Integration tests are available for these hooks:
+
+- `ArticleProtectComplete` - Page protection webhook notifications
+- `ArticleRevisionVisibilitySet` - Revision visibility change webhook notifications
+- `BlockIpComplete` - User blocking webhook notifications
+- `LocalUserCreated` - User registration webhook notifications
+- `PageDeleteComplete` - Page deletion webhook notifications
+- `PageMoveComplete` - Page move webhook notifications
+- `PageSaveComplete` - Edit and page creation webhook notifications
+- `PageUndeleteComplete` - Page restoration webhook notifications
+- `UnblockUserComplete` - User unblocking webhook notifications
+
+These hooks are not currently tested due to technical limitations:
+
+- `AfterImportPage` - Requires XML import infrastructure, complex setup
+- `ArticleMergeComplete` - Requires MergeHistory functionality, complex setup
+- `FileDeleteComplete` - Requires file upload infrastructure
+- `FileUndeleteComplete` - Requires file upload infrastructure
+- `RenameUserComplete` - Requires Renameuser extension
+- `UploadComplete` - Requires file upload infrastructure
+- `UserGroupsChanged` - Requires complex setup to trigger with proper performer context
 
 ## License
 
