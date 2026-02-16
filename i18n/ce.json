@@ -27,9 +27,5 @@
 	"discord-fileundeletecomplete": "$1 меттахӀоттийна цхьайолу версеш файлан $2 $3",
 	"discord-afterimportpage": "$1 импорт йина $2 (импорт йина $4/$3 версеш)",
 	"discord-articlemergecomplete": "$1 цхьаьнатоьхна версеш $2 - $3",
-	"discord-approvedrevsrevisionapproved": "$1 тӀечӀагӀйина керла верси $2 (верси $3) декъашхочун $4",
-	"discord-approvedrevsrevisionunapproved": "$1 тӀечӀагӀйина верси $2 тӀе ца эцна",
-	"discord-approvedrevsfilerevisionapproved": "$1 тӀечӀагӀйина $2 ($3) файлан керла верси декъашхочуьнгара $4",
-	"discord-approvedrevsfilerevisionunapproved": "$1 тӀе ца эцна $2 файлан тӀечӀагӀйина верси",
 	"discord-renameusercomplete": "$1 декъашхочун хийцина $2 → $3"
 }

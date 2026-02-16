@@ -29,9 +29,5 @@
 	"discord-fileundeletecomplete": "$1, $2 $3 dosyasının bazı sürümlerini geri yükledi",
 	"discord-afterimportpage": "$1, $2 ice aktardı ($4 içe aktarılan/$3 revizyon)",
 	"discord-articlemergecomplete": "$1, $2 ile $3 için revizyonları birleştirdi",
-	"discord-approvedrevsrevisionapproved": "$1, $4 kullanıcısından $2 (değişiklik $3) için yapılan yeni bir değişikliği onayladı",
-	"discord-approvedrevsrevisionunapproved": "$1, $2 için yapılan onaylı değişikliği reddetti",
-	"discord-approvedrevsfilerevisionapproved": "$1, $4 kullanıcısı tarafından $2 ($3) için yapılan yeni bir dosya değişikliğini onayladı",
-	"discord-approvedrevsfilerevisionunapproved": "$1, $2 için onaylanan değişikliği reddetti",
 	"discord-renameusercomplete": "$1, $2 kullanıcısını $3 olarak yeniden adlandırdı"
 }

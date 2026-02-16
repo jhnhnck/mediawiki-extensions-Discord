@@ -28,9 +28,5 @@
 	"discord-fileundeletecomplete": "$1 је вратио/ла поједине верзије датотеке $2 $3",
 	"discord-afterimportpage": "$1 је увезао/ла $2 (увезено $4/$3 измена)",
 	"discord-articlemergecomplete": "$1 је спојио/ла измене из $2 у $3",
-	"discord-approvedrevsrevisionapproved": "$1 је одобрио/ла нову измену $2 (измена $3) корисника $4",
-	"discord-approvedrevsrevisionunapproved": "$1 је поништио/ла одобрену измену за $2",
-	"discord-approvedrevsfilerevisionapproved": "$1 је одобрио/ла нову верзију датотеке $2 ($3) корисника $4",
-	"discord-approvedrevsfilerevisionunapproved": "$1 је поништио/ла одобрену верзију датотеке $2",
 	"discord-renameusercomplete": "$1 је преименовао/ла корисника $2 у $3"
 }

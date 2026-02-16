@@ -28,9 +28,5 @@
 	"discord-fileundeletecomplete": "استعاد $1 بعض إصدارات الملف $2 $3",
 	"discord-afterimportpage": "قام $1 باستيراد $2 (تم استيراد مراجعات $4 / $3)",
 	"discord-articlemergecomplete": "دمج $1 المراجعات من $2 إلى $3",
-	"discord-approvedrevsrevisionapproved": "وافق $1 على مراجعة جديدة بقيمة $2 (المراجعة $3) من المستخدم $4",
-	"discord-approvedrevsrevisionunapproved": "لم يوافق $1 على مراجعة الملف المعتمدة لـ $2",
-	"discord-approvedrevsfilerevisionapproved": "وافق $1 على مراجعة ملف جديد بقيمة $2 ($3) من المستخدم $4",
-	"discord-approvedrevsfilerevisionunapproved": "لم يوافق $1 على مراجعة الملف المعتمدة لـ $2",
 	"discord-renameusercomplete": "أعاد $1 تسمية المستخدم $2 إلى $3"
 }

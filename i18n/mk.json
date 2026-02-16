@@ -28,9 +28,5 @@
 	"discord-fileundeletecomplete": "$1 поврати некои верзии на податотека $2 $3",
 	"discord-afterimportpage": "$1 увезе $2 (увезени $4/$3 преработки)",
 	"discord-articlemergecomplete": "$1 спои преработки од $2 во $3",
-	"discord-approvedrevsrevisionapproved": "$1 одобри нова преработка на $2 (преработка $3) од корисникот $4",
-	"discord-approvedrevsrevisionunapproved": "$1 тргна одобрение од одобрената преработка за $2",
-	"discord-approvedrevsfilerevisionapproved": "$1 одобри нова преработка на податотека на $2 ($3) од корисникот $4",
-	"discord-approvedrevsfilerevisionunapproved": "$1 тргна одобрение од одобрената преработка на податотека за $2",
 	"discord-renameusercomplete": "$1 го преименуваше корисникот $2 во $3"
 }

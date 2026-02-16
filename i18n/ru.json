@@ -33,9 +33,5 @@
 	"discord-fileundeletecomplete": "$1 восстановил некоторые версии файла $2 $3",
 	"discord-afterimportpage": "$1 импортировал $2 (импортировано $4/$3 версий)",
 	"discord-articlemergecomplete": "$1 объединил версии из $2 в $3",
-	"discord-approvedrevsrevisionapproved": "$1 одобрил новую версию $2 (версия $3) от пользователя $4",
-	"discord-approvedrevsrevisionunapproved": "$1 не одобрил утверждённую версию $2",
-	"discord-approvedrevsfilerevisionapproved": "$1 одобрил новую версию файла $2 ($3) от пользователя $4",
-	"discord-approvedrevsfilerevisionunapproved": "$1 не одобрил утверждённую версию файла $2",
 	"discord-renameusercomplete": "$1 переименовал пользователя $2 в $3"
 }

@@ -29,9 +29,5 @@
 	"discord-fileundeletecomplete": "$1 heeft bepaalde versies van het bestand $2 teruggezet $3",
 	"discord-afterimportpage": "$1 heeft $2 geïmporteerd (er zijn $4 van de $3 versies geïmporteerd)",
 	"discord-articlemergecomplete": "$1 heeft de versies van $2 samengevoegd met $3",
-	"discord-approvedrevsrevisionapproved": "$1 heeft een nieuwe versie van $2 goedgekeurd (versie $3, auteur $4)",
-	"discord-approvedrevsrevisionunapproved": "$1 heeft de goedkeuring van de goedgekeurde versie van $2 ingetrokken",
-	"discord-approvedrevsfilerevisionapproved": "$1 heeft een nieuwe bestandsversie van $2 ($3) goedgekeurd, auteur: $4",
-	"discord-approvedrevsfilerevisionunapproved": "$1 heeft de goedkeuring van de goedgekeurde bestandsversie van $2 ingetrokken",
 	"discord-renameusercomplete": "$1 heeft de gebruiker $2 hernoemd tot $3"
 }

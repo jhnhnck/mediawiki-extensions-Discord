@@ -28,9 +28,5 @@
 	"discord-fileundeletecomplete": "$1 a restauré certaines versions du fichier $2 : $3",
 	"discord-afterimportpage": "$1 a importé $2 ($4 / $3 révisions importées)",
 	"discord-articlemergecomplete": "$1 a fusionné des versions de $2 vers $3",
-	"discord-approvedrevsrevisionapproved": "$1 a approuvé une nouvelle version de $2 (version $3) créée par $4",
-	"discord-approvedrevsrevisionunapproved": "$1 a désapprouvé la version approuvée de $2",
-	"discord-approvedrevsfilerevisionapproved": "$1 a approuvé une nouvelle version de fichier dans $2 ($3) créée par $4",
-	"discord-approvedrevsfilerevisionunapproved": "$1 a désapprouvé la version de fichier approuvée dans $2",
 	"discord-renameusercomplete": "$1 a renommé l’utilisateur ou l’utilisatrice $2 en $3"
 }

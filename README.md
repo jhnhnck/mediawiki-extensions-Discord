@@ -85,13 +85,6 @@ For now, compatibility with the original extension has been kept for the most pa
 - `UploadComplete` - File was uploaded
 - `UserGroupsChanged` - User rights changed
 
-### [Approved Revs](https://www.mediawiki.org/wiki/Extension:Approved_Revs)
-
-- `ApprovedRevsRevisionApproved` - Revision was approved
-- `ApprovedRevsRevisionUnapproved` - Revision was unapproved
-- `ApprovedRevsFileRevisionApproved` - File revision was approved
-- `ApprovedRevsFileRevisionUnapproved` - File revision was unapproved
-
 ### [Renameuser](https://www.mediawiki.org/wiki/Extension:Renameuser)
 
 - `RenameUserComplete` - Rename was completed

@@ -27,9 +27,5 @@
 	"discord-fileundeletecomplete": "$1 επανέφερε ορισμένες εκδόσεις του αρχείου $2 $3",
 	"discord-afterimportpage": "$1 εισήχθη $2 (εισαγμένες $4 / $3 αναθεωρήσεις)",
 	"discord-articlemergecomplete": "$1 συγχώνευσε αναθεωρήσεις από $2 σε $3",
-	"discord-approvedrevsrevisionapproved": "$1 ενέκρινε μια νέα αναθεώρηση των $2 (αναθεώρηση $3 ) από τον χρήστη $4",
-	"discord-approvedrevsrevisionunapproved": "$1 κατάργησε την έγκριση της εγκεκριμένης αναθεώρησης του αρχείου για $2",
-	"discord-approvedrevsfilerevisionapproved": "$1 ενέκρινε μια νέα αναθεώρηση αρχείου $2 ( $3 ) από τον χρήστη $4",
-	"discord-approvedrevsfilerevisionunapproved": "$1 κατάργησε την έγκριση της εγκεκριμένης αναθεώρησης του αρχείου για $2",
 	"discord-renameusercomplete": "$1 μετονόμασε τον χρήστη $2 σε $3"
 }

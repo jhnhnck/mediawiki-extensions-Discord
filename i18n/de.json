@@ -29,9 +29,5 @@
 	"discord-fileundeletecomplete": "$1 hat eine Version einer Datei wiederhergestellt von $2 $3",
 	"discord-afterimportpage": "$1 importierte $2 (Import $4/$3 revisionen)",
 	"discord-articlemergecomplete": "$1 hat die Revisionen von $2 mit $3 zusammengeführt",
-	"discord-approvedrevsrevisionapproved": "$1 genehmigte eine neue Revision von $2 (Revision $3) von $4",
-	"discord-approvedrevsrevisionunapproved": "$1 hat die genehmigte Revsision von $2 zurückgezogen.",
-	"discord-approvedrevsfilerevisionapproved": "$1 genehmigte eine neue Dateirevision von $2 ($3) durch Benutzer $4",
-	"discord-approvedrevsfilerevisionunapproved": "$1 hat die genehmigte Dateirevision von $2 zurückgezogen",
 	"discord-renameusercomplete": "$1 hat Benutzer von $2 in $3 umbenannt"
 }

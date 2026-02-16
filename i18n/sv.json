@@ -24,9 +24,5 @@
 	"discord-fileundeletecomplete": "$1 återställde några versioner av filen $2 $3",
 	"discord-afterimportpage": "$1 importerade $2 (importerade $4/$3 sidversioner)",
 	"discord-articlemergecomplete": "$1 sammanfogade sidversioner från $2 till $3",
-	"discord-approvedrevsrevisionapproved": "$1 godkände en ny sidversion av $2 (sidversion $3) från användare $4",
-	"discord-approvedrevsrevisionunapproved": "$1 drog in godkännandet av sidversionen för $2",
-	"discord-approvedrevsfilerevisionapproved": "$1 godkände en ny filrevision av $2 ($3) från användare $4",
-	"discord-approvedrevsfilerevisionunapproved": "$1 drog in godkännandet för filrevisionen för $2",
 	"discord-renameusercomplete": "$1 bytte namn på användare $2 till $3"
 }

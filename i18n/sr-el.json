@@ -27,9 +27,5 @@
 	"discord-fileundeletecomplete": "$1 je vratio/-la pojedine verzije datoteke $2 $3",
 	"discord-afterimportpage": "$1 je uvezao/-la $2 (uvezeno $4/$3 izmena)",
 	"discord-articlemergecomplete": "$1 je spojio/-la izmene iz $2 u $3",
-	"discord-approvedrevsrevisionapproved": "$1 je odobrio/-la novu izmenu $2 (izmena $3) od korisnika $4",
-	"discord-approvedrevsrevisionunapproved": "$1 je poništio/-la odobrenje izmene $2",
-	"discord-approvedrevsfilerevisionapproved": "$1 je odobrio/-la novu izmenu datoteke $2 ($3) od korisnika $4",
-	"discord-approvedrevsfilerevisionunapproved": "$1 je poništio/-la odobrenje izmene datoteke $2",
 	"discord-renameusercomplete": "$1 je preimenovao/-la korisnika $2 u $3"
 }

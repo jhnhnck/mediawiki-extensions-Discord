@@ -27,9 +27,5 @@
 	"discord-fileundeletecomplete": "חשבון $1 שחזר כמה גרסאות של קובץ $2 $3",
 	"discord-afterimportpage": "חשבון $1 ייבא את $2 (יובאו $4 מתוך $3 גרסאות)",
 	"discord-articlemergecomplete": "חשבון $1 מיזג גרסאות מתוך $2 לתוך $3",
-	"discord-approvedrevsrevisionapproved": "חשבון $1 אישר גרסה חדשה של $2 (גרסה $3) של חשבון $4",
-	"discord-approvedrevsrevisionunapproved": "חשבון $1 ביטל את אישור של הגרסה המאושרת של $2",
-	"discord-approvedrevsfilerevisionapproved": "חשבון $1 אישר גרסה חדשה של הקובץ $2 (גיבוב $3) של חשבון $4",
-	"discord-approvedrevsfilerevisionunapproved": "חשבון $1 ביטל את אישור של גרסת הקובץ של $2",
 	"discord-renameusercomplete": "חשבון $1 שינה את השם של משתמש $2 לשם $3"
 }

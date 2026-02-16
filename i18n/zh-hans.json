@@ -28,9 +28,5 @@
 	"discord-fileundeletecomplete": "$1恢复了文件$2的一些版本，原因：$3",
 	"discord-afterimportpage": "$1导入了$2（导入了$4/$3个版本）",
 	"discord-articlemergecomplete": "$1将$2的版本合并到$3",
-	"discord-approvedrevsrevisionapproved": "$1批准了来自用户$4的$2新版本$3",
-	"discord-approvedrevsrevisionunapproved": "$1取消批准$2的已批准版本",
-	"discord-approvedrevsfilerevisionapproved": "$1批准了来自用户$4的$2的新文件版本（$3）",
-	"discord-approvedrevsfilerevisionunapproved": "$1取消批准$2已批准的文件版本",
 	"discord-renameusercomplete": "$1将用户$2重命名为$3"
 }
