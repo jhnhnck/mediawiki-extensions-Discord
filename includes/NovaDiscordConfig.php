@@ -35,14 +35,22 @@ class NovaDiscordConfig {
      * (array of hook names). If absent, the webhook falls back to DiscordDefaultHooks.
      * A null value (the default) means all hooks are enabled for that webhook.
      */
+    // Hooks that are never included in the null (all hooks) default and must be explicitly listed.
+    private const EXPLICIT_ONLY_HOOKS = ['LogException'];
+
     public function getWebhooksForHook(string $hookName): array {
         $defaultHooks = $this->options->get('DiscordDefaultHooks');
         $urls = [];
         foreach ($this->options->get('DiscordWebhooks') as $webhook) {
             $hooks = array_key_exists('hooks', $webhook) ? $webhook['hooks'] : $defaultHooks;
-            if ($hooks === null || in_array($hookName, $hooks)) {
-                $urls[] = $webhook['url'];
+            if ($hooks === null) {
+                if (in_array($hookName, self::EXPLICIT_ONLY_HOOKS)) {
+                    continue;
+                }
+            } elseif (!in_array($hookName, $hooks)) {
+                continue;
             }
+            $urls[] = $webhook['url'];
         }
         return $urls;
     }
