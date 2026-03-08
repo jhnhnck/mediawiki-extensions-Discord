@@ -25,7 +25,7 @@ class ErrorAlert extends DiscordAlert implements LogExceptionHook {
      * Called when an exception is logged
      * @see https://www.mediawiki.org/wiki/Manual:Hooks/LogException
      */
-    public function onLogException(\Throwable $e, bool $suppressed): void {
+    public function onLogException($e, $suppressed): void {
         wfDebugLog('nova-discord', 'Completing hook LogException with ' . get_class($e));
 
         // skip errors suppressed via @ operator or error_reporting()
