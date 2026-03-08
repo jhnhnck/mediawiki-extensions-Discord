@@ -62,7 +62,8 @@ wfLoadSkin('Vector');
 
 # Extensions
 wfLoadExtension('NovaDiscord');
-$wgDiscordWebhookURL = ["{$_ENV['NOVA_WEBHOOK_URL']}"];
+$wgDiscordWebhooks = [['url' => "{$_ENV['NOVA_WEBHOOK_URL']}"]];
+
 $wgDiscordNoBots = false;
 
 # Misc

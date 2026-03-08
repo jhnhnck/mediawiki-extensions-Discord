@@ -22,9 +22,10 @@ class FileAlert extends DiscordAlert implements UploadCompleteHook, FileDeleteCo
                                 RevisionLookup $revLookup,
                                 TitleFactory $titleFactory,
                                 UrlUtils $urlUtils,
-                                UserFactory $userFactory) {
+                                UserFactory $userFactory,
+                                NovaDiscordConfig $novaConfig) {
         $this->userFactory = $userFactory;
-        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils);
+        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig);
     }
 
     /**

@@ -4,49 +4,56 @@
         "[https://github.com/jhnhnck John Hancock]"
     ],
     "url": "https://github.com/jhnhnck/mediawiki-extensions-NovaDiscord",
-    "version": "2.1.0",
+    "version": "3.0.0",
     "descriptionmsg": "discord-desc",
     "license-name": "MIT",
     "requires": {
         "MediaWiki": ">= 1.44.0"
     },
-    "manifest_version": 1,
+    "manifest_version": 2,
     "config": {
-        "DiscordWebhookURL": [],
-        "DiscordNoBots": true,
-        "DiscordNoMinor": false,
-        "DiscordNoNull": true,
-        "DiscordSuppressPreviews": true,
-        "DiscordMaxChars": 500,
-        "DiscordMaxCharsUsernames": 25,
-        "DiscordDisabledHooks": [],
-        "DiscordDisabledNS": [],
-        "DiscordDisabledUsers": [
-            "Redirect fixer"
-        ],
-        "DiscordPrependTimestamp": false,
-        "DiscordUseEmojis": false,
-        "DiscordPrivateExceptionAlerts": false,
-        "DiscordEmojis": {
-            "PageSaveComplete": ":pencil2:",
-            "PageDeleteComplete": ":wastebasket:",
-            "PageUndeleteComplete": ":wastebasket:",
-            "ArticleRevisionVisibilitySet": ":spy:",
-            "ArticleProtectComplete": ":lock:",
-            "PageMoveComplete": ":truck:",
-            "LocalUserCreated": ":wave:",
-            "BlockIpComplete": ":no_entry_sign:",
-            "UnblockUserComplete": ":no_entry_sign:",
-            "UserGroupsChanged": ":people_holding_hands:",
-            "UploadComplete": ":inbox_tray:",
-            "FileDeleteComplete": ":wastebasket:",
-            "FileUndeleteComplete": ":wastebasket:",
-            "AfterImportPage": ":books:",
-            "ArticleMergeComplete": ":card_box:",
-            "RenameUserComplete": ":people_holding_hands:",
-            "LogException": ":warning:"
+        "DiscordWebhooks": {
+            "value": [],
+            "description": "Array of webhook configurations. Each entry must have a 'url' key (string) and an optional 'hooks' key (array of hook names, or null). If 'hooks' is absent, the webhook uses DiscordDefaultHooks. Example: [{'url': 'https://...', 'hooks': ['PageSaveComplete']}]"
+        },
+        "DiscordDefaultHooks": {
+            "value": null,
+            "description": "Default set of hook names enabled for webhooks that do not specify their own 'hooks' key. null means all hooks are enabled."
+        },
+        "DiscordNoBots": {
+            "value": true,
+            "description": "If true, actions performed by bot accounts do not trigger webhook notifications."
+        },
+        "DiscordNoMinor": {
+            "value": false,
+            "description": "If true, minor edits do not trigger a PageSaveComplete notification."
+        },
+        "DiscordNoNull": {
+            "value": true,
+            "description": "If true, null edits (no content change) do not trigger a PageSaveComplete notification."
+        },
+        "DiscordMaxChars": {
+            "value": 500,
+            "description": "Maximum number of characters shown for user-provided text such as edit summaries and block reasons. Longer text is truncated."
+        },
+        "DiscordDisabledNS": {
+            "value": [],
+            "description": "Array of namespace IDs whose page events should not trigger notifications."
+        },
+        "DiscordDisabledUsers": {
+            "value": [
+                "Redirect fixer"
+            ],
+            "description": "Array of usernames whose actions should not trigger notifications."
+        },
+        "DiscordPrivateExceptionAlerts": {
+            "value": false,
+            "description": "If true, unhandled PHP exceptions are posted to the webhook. Rate-limited per exception fingerprint. Opt-in only."
         }
     },
+    "ServiceWiringFiles": [
+        "ServiceWiring.php"
+    ],
     "AutoloadNamespaces": {
         "MediaWiki\\Extension\\NovaDiscord\\": "includes/"
     },
@@ -66,7 +73,8 @@
                 "TitleFactory",
                 "UrlUtils",
                 "UserFactory",
-                "WikiPageFactory"
+                "WikiPageFactory",
+                "NovaDiscord.Config"
             ]
         },
         "UserAlert": {
@@ -76,7 +84,8 @@
                 "RevisionLookup",
                 "TitleFactory",
                 "UrlUtils",
-                "UserFactory"
+                "UserFactory",
+                "NovaDiscord.Config"
             ]
         },
         "ArticleAlert": {
@@ -86,7 +95,8 @@
                 "RevisionLookup",
                 "TitleFactory",
                 "UrlUtils",
-                "UserFactory"
+                "UserFactory",
+                "NovaDiscord.Config"
             ]
         },
         "FileAlert": {
@@ -96,7 +106,8 @@
                 "RevisionLookup",
                 "TitleFactory",
                 "UrlUtils",
-                "UserFactory"
+                "UserFactory",
+                "NovaDiscord.Config"
             ]
         },
         "ExtensionAlert": {
@@ -106,7 +117,8 @@
                 "RevisionLookup",
                 "TitleFactory",
                 "UrlUtils",
-                "UserFactory"
+                "UserFactory",
+                "NovaDiscord.Config"
             ]
         },
         "ErrorAlert": {
@@ -115,7 +127,8 @@
                 "HttpRequestFactory",
                 "RevisionLookup",
                 "TitleFactory",
-                "UrlUtils"
+                "UrlUtils",
+                "NovaDiscord.Config"
             ]
         }
     },

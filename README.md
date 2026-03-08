@@ -34,38 +34,55 @@ git clone --depth=1 --branch 'REL1_44' https://github.com/jhnhnck/mediawiki-exte
 // Load the extension
 wfLoadExtension('NovaDiscord');
 
-// Set the webhook URL(s) (string or array)
-$wgDiscordWebhookURL = ['https://discord.com/api/webhooks/...'];
+// Set the webhook URL(s)
+$wgDiscordWebhooks = [
+    ['url' => 'https://discord.com/api/webhooks/...'],
+];
 ```
 
 ## Configuration
 
-This extension can be configured using the `LocalSettings.php` file in your MediaWiki installation. Only `$wgDiscordWebhookURL` is required; all other settings are optional and used to customize the behavior.
+This extension can be configured using the `LocalSettings.php` file in your MediaWiki installation. Only `$wgDiscordWebhooks` is required; all other settings are optional.
+
+### Webhooks
 
 | Variable | Type | Description | Default |
 | --- | --- | --- | --- |
-| `$wgDiscordWebhookURL` **(required)** | string\|array | [Webhook URL](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks) for Discord channel; multiple URLs can be provided as an array of strings | *none* |
-| `$wgDiscordNoBots` | bool | Do not send notifications that are triggered by a [bot account](https://www.mediawiki.org/wiki/Manual:Bots) | `true` |
-| `$wgDiscordNoMinor` | bool | Do not send notifications that are for [minor edits](https://www.mediawiki.org/wiki/Help:Minor_edit) | `false` |
+| `$wgDiscordWebhooks` **(required)** | array | List of webhook configurations. Each entry must have a `url` key and an optional `hooks` key (see below). | `[]` |
+| `$wgDiscordDefaultHooks` | array\|null | Default set of hook names enabled for webhooks that do not specify their own `hooks` key. `null` means all hooks are enabled. | `null` |
+
+Each entry in `$wgDiscordWebhooks` supports:
+
+- `url` *(required)*: The [Discord webhook URL](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks).
+- `hooks` *(optional)*: Array of hook names this webhook should receive. If absent, falls back to `$wgDiscordDefaultHooks`.
+
+```php
+// Send all events to one webhook, and only page edits to another:
+$wgDiscordWebhooks = [
+    ['url' => 'https://discord.com/api/webhooks/...'],
+    ['url' => 'https://discord.com/api/webhooks/...', 'hooks' => ['PageSaveComplete']],
+];
+
+// Only send page saves and deletions by default (applies to all webhooks without explicit 'hooks'):
+$wgDiscordDefaultHooks = ['PageSaveComplete', 'PageDeleteComplete'];
+```
+
+### Filters
+
+| Variable | Type | Description | Default |
+| --- | --- | --- | --- |
+| `$wgDiscordNoBots` | bool | Do not send notifications triggered by a [bot account](https://www.mediawiki.org/wiki/Manual:Bots) | `true` |
+| `$wgDiscordNoMinor` | bool | Do not send notifications for [minor edits](https://www.mediawiki.org/wiki/Help:Minor_edit) | `false` |
 | `$wgDiscordNoNull` | bool | Do not send notifications for [null edits](https://www.mediawiki.org/wiki/Manual:Purge#Null_edits) | `true` |
-| `$wgDiscordSuppressPreviews` | bool | Force previews for links in Discord messages to be suppressed | `true` |
-| `$wgDiscordMaxChars` | int | Maximum amount of characters for user-generated text (e.g summaries, reasons). Set to `null` to disable truncation | `500` |
-| `$wgDiscordMaxCharsUsernames` | int | Maximum amount of characters for usernames. Set to `null` to disable truncation | `25` |
-| `$wgDiscordDisabledHooks` | string\|array | List of hooks to disable sending webhooks for (see [below](#hooks-used)) | `[]` |
-| `$wgDiscordDisabledNS` | int\|array | List of namespace **IDs** to disable sending webhooks for. (see [below](#resources)) | `[]` |
-| `$wgDiscordDisabledUsers` | string\|array | List of users whose performed actions shouldn't send webhooks | `[]` |
-| `$wgDiscordPrependTimestamp` | bool | Prepend a timestamp (in UTC) to all sent messages. The format can be changed by editing the MediaWiki message `discord-timestampformat` | `false` |
-| `$wgDiscordUseEmojis` | bool | Prepend emojis to different types of messages to help distinguish them | `false` |
-| `$wgDiscordEmojis` | string associative array | Map of hook names and their associated emojis to prepend to messages if `$wgDiscordUseEmojis` is enabled | See [extension.json](/extension.json#L30) |
-| `$wgDiscordPrivateExceptionAlerts` | bool | Send a webhook alert when an unhandled PHP exception is logged; rate-limited to one alert per exception type per 5 minutes (requires APCu); user-facing errors like permission denials and 404s are filtered out | `false` |
+| `$wgDiscordDisabledNS` | int\|array | List of namespace **IDs** to suppress notifications for (see [below](#resources)) | `[]` |
+| `$wgDiscordDisabledUsers` | string\|array | List of usernames whose actions should not trigger notifications | `["Redirect fixer"]` |
 
-## Compatibility
+### Other
 
-For now, compatibility with the original extension has been kept for the most part. Any differences will be listed below:
-
-- `$wgDiscordMaxChars`: Default changed to `500` characters as a temporary bug fix for avoiding issues with the total webhook max length
-- `discord-timestampformat`: Format string changed to use Discord's built-in timestamp support
-- `PageUndeleteComplete` is now used instead of the deprecated `ArticleUndelete` hook; may need to change config for `$wgDiscordEmojis` or `$wgDiscordDisabledHooks`
+| Variable | Type | Description | Default |
+| --- | --- | --- | --- |
+| `$wgDiscordMaxChars` | int | Maximum characters for user-provided text (summaries, reasons). Longer text is truncated. | `500` |
+| `$wgDiscordPrivateExceptionAlerts` | bool | Send a webhook alert when an unhandled PHP exception is logged; rate-limited to one alert per exception fingerprint per 5 minutes (requires APCu); user-facing errors are filtered out | `false` |
 
 ## Hooks used
 

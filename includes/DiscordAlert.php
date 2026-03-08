@@ -12,7 +12,6 @@ use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\User;
-use MediaWiki\Utils\MWTimestamp;
 use MediaWiki\Utils\UrlUtils;
 
 abstract class DiscordAlert {
@@ -20,36 +19,30 @@ abstract class DiscordAlert {
     private RevisionLookup $revLookup;
     private TitleFactory $titleFactory;
     private UrlUtils $urlUtils;
+    protected NovaDiscordConfig $novaConfig;
 
     public function __construct(HttpRequestFactory $httpFactory,
                                 RevisionLookup $revLookup,
                                 TitleFactory $titleFactory,
-                                UrlUtils $urlUtils) {
+                                UrlUtils $urlUtils,
+                                NovaDiscordConfig $novaConfig) {
         $this->httpFactory = $httpFactory;
         $this->revLookup = $revLookup;
         $this->titleFactory = $titleFactory;
         $this->urlUtils = $urlUtils;
+        $this->novaConfig = $novaConfig;
     }
 
     // handles sending a webhook to Discord
     protected function sendAlert(string $hookName, string $msg, int $timestamp): void {
         wfDebugLog('nova-discord', 'Triggering discord webhook with ' . $hookName . ' and ' . $msg);
 
-        global $wgDiscordWebhookURL, $wgDiscordEmojis, $wgDiscordUseEmojis, $wgDiscordPrependTimestamp;
-        $urls = array_merge([], (array)$wgDiscordWebhookURL);
+        $urls = $this->novaConfig->getWebhooksForHook($hookName);
+        if ($urls === []) {
+            return;
+        }
+
         $stripped = preg_replace('/\s+/', ' ', $msg);
-
-        // add timestamp
-        if ($wgDiscordPrependTimestamp) {
-            $unixTime = MWTimestamp::convert(TS_UNIX, $timestamp) ?: time();
-            $dateString = wfMessage('discord-timestampformat', $unixTime)->inContentLanguage()->text();
-            $stripped = "{$dateString} {$stripped}";
-        }
-
-        // add emoji
-        if ($wgDiscordUseEmojis) {
-            $stripped = "{$wgDiscordEmojis[$hookName]} {$stripped}";
-        }
 
         // webhook payload
         $json_data = [
@@ -71,47 +64,22 @@ abstract class DiscordAlert {
         }
     }
 
-    // checks if alert should be sent
+    // checks if alert should be sent based on bot/namespace/user filters
     protected function isEnabled(string $hookName, ?int $namespace, User $user): bool {
-        global $wgDiscordNoBots,
-            $wgDiscordWebhookURL,
-            $wgDiscordDisabledHooks,
-            $wgDiscordDisabledNS,
-            $wgDiscordDisabledUsers;
-
         // So this shows up in testing and not just when bots are disabled
         if (!$user instanceof User) {
             throw new InvalidArgumentException('$user must be of type User');
-        } elseif ($wgDiscordNoBots && $user->isBot()) {
+        } elseif ($this->novaConfig->isNoBots() && $user->isBot()) {
             return false;
         }
 
-        if (!is_string($wgDiscordWebhookURL) && !is_array($wgDiscordWebhookURL)) {
-            wfDebugLog('nova-discord', '$wgDiscordWebhookURL invalid; all alerts disabled');
+        if ($namespace !== null && in_array($namespace, $this->novaConfig->getDisabledNS())) {
             return false;
         }
 
-        if (!is_array($wgDiscordDisabledHooks)) {
-            wfDebugLog('nova-discord', '$wgDiscordDisabledHooks invalid; all hooks enabled');
-        } elseif (in_array(strtolower($hookName), array_map('strtolower', $wgDiscordDisabledHooks))) {
+        $userName = $user->getName();
+        if ($userName && in_array($userName, $this->novaConfig->getDisabledUsers())) {
             return false;
-        }
-
-        if ($namespace !== null) {
-            if (!is_array($wgDiscordDisabledNS)) {
-                wfDebugLog('nova-discord', '$wgDiscordDisabledNS invalid; all namespaces enabled');
-            } elseif (in_array($namespace, $wgDiscordDisabledNS)) {
-                return false;
-            }
-        }
-
-        if (!is_array($wgDiscordDisabledUsers)) {
-            wfDebugLog('nova-discord', '$wgDiscordDisabledUsers invalid; all users allowed');
-        } else {
-            $userName = $user->getName();
-            if ($userName && in_array($userName, $wgDiscordDisabledUsers)) {
-                return false;
-            }
         }
 
         return true;
@@ -137,32 +105,22 @@ abstract class DiscordAlert {
     }
 
     /**
-     * Creates a formatted markdown link based on text and given URL
+     * Creates a formatted markdown link based on text and given URL.
+     * Link previews are always suppressed to keep Discord clean.
      */
     protected static function formatMarkdownLink(string $text, string $url): string {
-        global $wgDiscordSuppressPreviews;
-        // TODO: this was originally ' ()', but leaving blank for now - unsure if needed
-        $invalidChars = '';
-
-        // TODO: Is this even an option to care about supporting?
-        if ($wgDiscordSuppressPreviews) {
-            return "[" . $text . "]" . '(<' . addcslashes($url, $invalidChars) . '>)';
-        } else {
-            return "[" . $text . "]" . '(' . addcslashes($url, $invalidChars) . ')';
-        }
+        return "[" . $text . "](<" . $url . ">)";
     }
 
     /**
      * Returns a markdown-formatted string that links to the user's page and their talk & contrib pages
      */
     protected function formatUserLink(User $user): string {
-        global $wgDiscordMaxCharsUsernames;
-
         $contribLabel = wfMessage('discord-contribs')->inContentLanguage()->text();
         $contribLink = SpecialPage::getTitleFor('Contributions', $user->getName())->getCanonicalURL();
 
         // fall back to contributions link if its an anon user
-        $userLabel = $this->truncateString($user->getName(), $wgDiscordMaxCharsUsernames);
+        $userLabel = $this->truncateString($user->getName(), 25);
         $userLink = !$user->isAnon() ? $user->getUserPage()->getCanonicalURL() : $contribLink;
 
         $talkLabel = wfMessage('discord-talk')->inContentLanguage()->text();
@@ -177,7 +135,6 @@ abstract class DiscordAlert {
     }
 
     protected function formatMessage(string $message): string {
-        global $wgDiscordMaxChars;
         // TODO: adjust as needed
         $invalidChars = '`@';
 
@@ -185,7 +142,7 @@ abstract class DiscordAlert {
             return '';
         }
 
-        $trimmed = $this->truncateString(addcslashes($message, $invalidChars), $wgDiscordMaxChars);
+        $trimmed = $this->truncateString(addcslashes($message, $invalidChars), $this->novaConfig->getMaxChars());
 
         return '`' . $trimmed . '`';
     }

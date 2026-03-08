@@ -34,11 +34,12 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
                                 TitleFactory $titleFactory,
                                 UrlUtils $urlUtils,
                                 UserFactory $userFactory,
-                                WikiPageFactory $pageFactory) {
+                                WikiPageFactory $pageFactory,
+                                NovaDiscordConfig $novaConfig) {
         $this->userFactory = $userFactory;
         $this->pageFactory = $pageFactory;
 
-        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils);
+        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig);
     }
 
     /**
@@ -63,7 +64,6 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
         wfDebugLog('nova-discord', 'Completing hook ' . $hookName . ' with on ' . $wikiPage);
 
         $user = $this->userFactory->newFromUserIdentity($userIdentity);
-        global $wgDiscordNoMinor, $wgDiscordNoNull;
 
         // check if hook is enabled
         if (!$this->isEnabled($hookName, $wikiPage->getTitle()->getNamespace(), $user)) {
@@ -71,7 +71,7 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
         }
 
         // filter out minor/null edits if configured
-        if (($wgDiscordNoMinor && $revision->isMinor()) || ($wgDiscordNoNull && $editResult->isNullEdit())) {
+        if (($this->novaConfig->isNoMinor() && $revision->isMinor()) || ($this->novaConfig->isNoNull() && $editResult->isNullEdit())) {
             return;
         }
 

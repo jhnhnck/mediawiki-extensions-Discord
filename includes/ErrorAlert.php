@@ -16,8 +16,9 @@ class ErrorAlert extends DiscordAlert implements LogExceptionHook {
     public function __construct(HttpRequestFactory $httpFactory,
                                 RevisionLookup $revLookup,
                                 TitleFactory $titleFactory,
-                                UrlUtils $urlUtils) {
-        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils);
+                                UrlUtils $urlUtils,
+                                NovaDiscordConfig $novaConfig) {
+        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig);
     }
 
     /**
@@ -39,20 +40,13 @@ class ErrorAlert extends DiscordAlert implements LogExceptionHook {
             }
         }
 
-        global $wgDiscordPrivateExceptionAlerts, $wgDiscordWebhookURL, $wgDiscordDisabledHooks, $wgDiscordMaxChars;
-
         // opt-in only; disabled by default
-        if (!$wgDiscordPrivateExceptionAlerts) {
+        if (!$this->novaConfig->isPrivateExceptionAlertsEnabled()) {
             return;
         }
 
-        if (!is_string($wgDiscordWebhookURL) && !is_array($wgDiscordWebhookURL)) {
-            return;
-        }
-
-        // respect disabled hooks config (no User object available, so isEnabled() can't be used)
-        if (is_array($wgDiscordDisabledHooks) &&
-            in_array('logexception', array_map('strtolower', $wgDiscordDisabledHooks))) {
+        // no webhooks enabled for this hook = nothing to do
+        if ($this->novaConfig->getWebhooksForHook('LogException') === []) {
             return;
         }
 
@@ -73,7 +67,7 @@ class ErrorAlert extends DiscordAlert implements LogExceptionHook {
 
         $msg = '[' . get_class($e) . '] ' . $this->truncateString(
             $e->getMessage() . ' - ' . $file . ' (' . $context . ')',
-            $wgDiscordMaxChars ?? 500
+            $this->novaConfig->getMaxChars()
         );
 
         $this->sendAlert('LogException', $msg, time());
