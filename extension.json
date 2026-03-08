@@ -26,6 +26,7 @@
         ],
         "DiscordPrependTimestamp": false,
         "DiscordUseEmojis": false,
+        "DiscordPrivateExceptionAlerts": false,
         "DiscordEmojis": {
             "PageSaveComplete": ":pencil2:",
             "PageDeleteComplete": ":wastebasket:",
@@ -42,7 +43,8 @@
             "FileUndeleteComplete": ":wastebasket:",
             "AfterImportPage": ":books:",
             "ArticleMergeComplete": ":card_box:",
-            "RenameUserComplete": ":people_holding_hands:"
+            "RenameUserComplete": ":people_holding_hands:",
+            "LogException": ":warning:"
         }
     },
     "AutoloadNamespaces": {
@@ -106,6 +108,15 @@
                 "UrlUtils",
                 "UserFactory"
             ]
+        },
+        "ErrorAlert": {
+            "class": "MediaWiki\\Extension\\NovaDiscord\\ErrorAlert",
+            "services": [
+                "HttpRequestFactory",
+                "RevisionLookup",
+                "TitleFactory",
+                "UrlUtils"
+            ]
         }
     },
     "Hooks": {
@@ -124,6 +135,7 @@
         "UploadComplete": "FileAlert",
         "FileDeleteComplete": "FileAlert",
         "FileUndeleteComplete": "FileAlert",
-        "RenameUserComplete": "ExtensionAlert"
+        "RenameUserComplete": "ExtensionAlert",
+        "LogException": "ErrorAlert"
     }
 }

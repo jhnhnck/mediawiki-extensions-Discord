@@ -57,6 +57,7 @@ This extension can be configured using the `LocalSettings.php` file in your Medi
 | `$wgDiscordPrependTimestamp` | bool | Prepend a timestamp (in UTC) to all sent messages. The format can be changed by editing the MediaWiki message `discord-timestampformat` | `false` |
 | `$wgDiscordUseEmojis` | bool | Prepend emojis to different types of messages to help distinguish them | `false` |
 | `$wgDiscordEmojis` | string associative array | Map of hook names and their associated emojis to prepend to messages if `$wgDiscordUseEmojis` is enabled | See [extension.json](/extension.json#L30) |
+| `$wgDiscordPrivateExceptionAlerts` | bool | Send a webhook alert when an unhandled PHP exception is logged; rate-limited to one alert per exception type per 5 minutes (requires APCu); user-facing errors like permission denials and 404s are filtered out | `false` |
 
 ## Compatibility
 
@@ -87,6 +88,10 @@ For now, compatibility with the original extension has been kept for the most pa
 ### [Renameuser](https://www.mediawiki.org/wiki/Extension:Renameuser)
 
 - `RenameUserComplete` - Rename was completed
+
+### Exception Alerting (opt-in)
+
+- `LogException` - Unhandled PHP exception; requires `$wgDiscordPrivateExceptionAlerts = true`
 
 ## Resources
 
