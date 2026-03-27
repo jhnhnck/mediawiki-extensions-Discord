@@ -11,6 +11,7 @@ use MediaWiki\Block\DatabaseBlock;
 use MediaWiki\Hook\BlockIpCompleteHook;
 use MediaWiki\Hook\UnblockUserCompleteHook;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\Logger\Spi as LoggerSpi;
 use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\Hook\UserGroupsChangedHook;
@@ -27,9 +28,10 @@ class UserAlert extends DiscordAlert implements LocalUserCreatedHook, BlockIpCom
                                 TitleFactory $titleFactory,
                                 UrlUtils $urlUtils,
                                 UserFactory $userFactory,
-                                NovaDiscordConfig $novaConfig) {
+                                NovaDiscordConfig $novaConfig,
+                                LoggerSpi $loggerSpi) {
         $this->userFactory = $userFactory;
-        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig);
+        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig, $loggerSpi);
     }
 
     /**
@@ -45,7 +47,7 @@ class UserAlert extends DiscordAlert implements LocalUserCreatedHook, BlockIpCom
 
         $msg = wfMessage('discord-localusercreated', $this->formatUserLink($user))
             ->inContentLanguage()->plain();
-        $this->sendAlert($hookName, $msg, time());
+        $this->sendAlert($hookName, $msg, (int)wfTimestamp(TS_UNIX, $user->getRegistration()));
     }
 
     /**
@@ -81,7 +83,7 @@ class UserAlert extends DiscordAlert implements LocalUserCreatedHook, BlockIpCom
             $this->formatMessage($block->getReasonComment()->text),
             $expiryMsg
         )->inContentLanguage()->plain();
-        $this->sendAlert($hookName, $msg, time());
+        $this->sendAlert($hookName, $msg, (int)wfTimestamp(TS_UNIX, $block->getTimestamp()));
     }
 
     /**
@@ -105,7 +107,7 @@ class UserAlert extends DiscordAlert implements LocalUserCreatedHook, BlockIpCom
 
         $msg = wfMessage('discord-unblockusercomplete', $this->formatUserLink($user), $targetLinks)
             ->inContentLanguage()->text();
-        $this->sendAlert($hookName, $msg, time());
+        $this->sendAlert($hookName, $msg, (int)wfTimestamp(TS_UNIX, $block->getTimestamp()));
     }
 
     /**
@@ -116,7 +118,7 @@ class UserAlert extends DiscordAlert implements LocalUserCreatedHook, BlockIpCom
         $hookName = 'UserGroupsChanged';
 
         if ($performer === false) {
-            // Rights were changed by autopromotion, do nothing
+            // Rights were changed by auto-promotion, do nothing
             return;
         }
 

@@ -42,6 +42,11 @@ class NovaDiscordConfig {
         $defaultHooks = $this->options->get('DiscordDefaultHooks');
         $urls = [];
         foreach ($this->options->get('DiscordWebhooks') as $webhook) {
+            $url = $webhook['url'] ?? '';
+            // skip misconfigured entries; require https to prevent SSRF via http/file/etc URLs
+            if (!str_starts_with($url, 'https://') || !filter_var($url, FILTER_VALIDATE_URL)) {
+                continue;
+            }
             $hooks = array_key_exists('hooks', $webhook) ? $webhook['hooks'] : $defaultHooks;
             if ($hooks === null) {
                 if (in_array($hookName, self::EXPLICIT_ONLY_HOOKS)) {
@@ -50,7 +55,7 @@ class NovaDiscordConfig {
             } elseif (!in_array($hookName, $hooks)) {
                 continue;
             }
-            $urls[] = $webhook['url'];
+            $urls[] = $url;
         }
         return $urls;
     }

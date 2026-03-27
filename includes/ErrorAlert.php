@@ -6,11 +6,15 @@
 
 namespace MediaWiki\Extension\NovaDiscord;
 
+use MediaWiki\Exception\ErrorPageError;
+use MediaWiki\Exception\HttpError;
 use MediaWiki\Hook\LogExceptionHook;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\Logger\Spi as LoggerSpi;
 use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\Utils\UrlUtils;
+use Psr\Log\NullLogger;
 
 class ErrorAlert extends DiscordAlert implements LogExceptionHook {
     public function __construct(HttpRequestFactory $httpFactory,
@@ -18,7 +22,16 @@ class ErrorAlert extends DiscordAlert implements LogExceptionHook {
                                 TitleFactory $titleFactory,
                                 UrlUtils $urlUtils,
                                 NovaDiscordConfig $novaConfig) {
-        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig);
+        // Use a NullLogger rather than injecting LoggerFactory: this hook fires during
+        // exception handling, potentially before services are fully initialized or when
+        // the original exception is itself a service-container failure. Requesting
+        // LoggerFactory here would cause a cascading fatal error in those cases.
+        $nullSpi = new class implements LoggerSpi {
+            public function getLogger( $channel ) {
+                return new NullLogger();
+            }
+        };
+        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig, $nullSpi);
     }
 
     /**
@@ -26,7 +39,7 @@ class ErrorAlert extends DiscordAlert implements LogExceptionHook {
      * @see https://www.mediawiki.org/wiki/Manual:Hooks/LogException
      */
     public function onLogException($e, $suppressed): void {
-        wfDebugLog('nova-discord', 'Completing hook LogException with ' . get_class($e));
+        $this->logger->debug('Completing hook LogException with ' . get_class($e));
 
         // skip errors suppressed via @ operator or error_reporting()
         if ($suppressed) {
@@ -34,7 +47,7 @@ class ErrorAlert extends DiscordAlert implements LogExceptionHook {
         }
 
         // skip user-navigation errors; these are expected behavior, not bugs
-        foreach ([\ErrorPageError::class, \HttpError::class] as $class) {
+        foreach ([ErrorPageError::class, HttpError::class] as $class) {
             if ($e instanceof $class) {
                 return;
             }
@@ -59,8 +72,7 @@ class ErrorAlert extends DiscordAlert implements LogExceptionHook {
             apcu_store($fingerprint, 1, 300);
         }
 
-        global $IP;
-        $file = str_replace("{$IP}/", '', $e->getFile()) . ':' . $e->getLine();
+        $file = str_replace(MW_INSTALL_PATH . '/', '', $e->getFile()) . ':' . $e->getLine();
         $method = $_SERVER['REQUEST_METHOD'] ?? 'CLI';
         $uri = $_SERVER['REQUEST_URI'] ?? '';
         $context = $uri ? "{$method} {$uri}" : $method;

@@ -8,6 +8,7 @@ namespace MediaWiki\Extension\NovaDiscord;
 
 use MediaWiki\Hook\PageMoveCompleteHook;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\Logger\Spi as LoggerSpi;
 use MediaWiki\Logging\ManualLogEntry;
 use MediaWiki\Page\Hook\PageDeleteCompleteHook;
 use MediaWiki\Page\Hook\PageUndeleteCompleteHook;
@@ -35,11 +36,12 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
                                 UrlUtils $urlUtils,
                                 UserFactory $userFactory,
                                 WikiPageFactory $pageFactory,
-                                NovaDiscordConfig $novaConfig) {
+                                NovaDiscordConfig $novaConfig,
+                                LoggerSpi $loggerSpi) {
         $this->userFactory = $userFactory;
         $this->pageFactory = $pageFactory;
 
-        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig);
+        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig, $loggerSpi);
     }
 
     /**
@@ -61,7 +63,7 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
                                     RevisionRecord $revision,
                                     EditResult $editResult): void {
         $hookName = 'PageSaveComplete';
-        wfDebugLog('nova-discord', 'Completing hook ' . $hookName . ' with on ' . $wikiPage);
+        $this->logger->debug('Completing hook ' . $hookName . ' on ' . $wikiPage);
 
         $user = $this->userFactory->newFromUserIdentity($userIdentity);
 
@@ -88,7 +90,12 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
             $this->formatMessage($summary),
         )->inContentLanguage()->plain();
 
-        $this->sendAlert($hookName, $msg, $revision->getTimestamp());
+        $diffBlock = $this->getDiffBlock($revision);
+        if ($diffBlock !== null) {
+            $msg .= "\n" . $diffBlock;
+        }
+
+        $this->sendAlert($hookName, $msg, (int)wfTimestamp(TS_UNIX, $revision->getTimestamp()));
     }
 
     /**
@@ -103,7 +110,7 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
                                          ManualLogEntry $logEntry,
                                          int $archivedRevisionCount): void {
         $hookName = 'PageDeleteComplete';
-        wfDebugLog('nova-discord', 'Completing hook ' . $hookName . ' with on ' . $page);
+        $this->logger->debug('Completing hook ' . $hookName . ' on ' . $page);
 
         // TODO: possible to remove this Title call?
         $user = $this->userFactory->newFromUserIdentity($deleter->getUser());
@@ -121,7 +128,7 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
             $archivedRevisionCount
         )->inContentLanguage()->plain();
 
-        $this->sendAlert($hookName, $msg, $deletedRev->getTimestamp());
+        $this->sendAlert($hookName, $msg, (int)wfTimestamp(TS_UNIX, $deletedRev->getTimestamp()));
     }
 
     /**
@@ -144,7 +151,7 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
                                     string $reason,
                                     RevisionRecord $revision): void {
         $hookName = 'PageMoveComplete';
-        wfDebugLog('nova-discord', 'Completing hook ' . $hookName . ' with on ' . $old);
+        $this->logger->debug('Completing hook ' . $hookName . ' on ' . $old);
 
         $user = $this->userFactory->newFromUserIdentity($userIdentity);
 
@@ -165,7 +172,7 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
             $this->formatRevisionText($revision),
         )->inContentLanguage()->plain();
 
-        $this->sendAlert($hookName, $msg, $revision->getTimestamp());
+        $this->sendAlert($hookName, $msg, (int)wfTimestamp(TS_UNIX, $revision->getTimestamp()));
     }
 
     /**
@@ -181,7 +188,7 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
                                            bool $created,
                                            array $restoredPageIds): void {
         $hookName = 'PageUndeleteComplete';
-        wfDebugLog('nova-discord', 'Completing hook ' . $hookName . ' with on ' . $page);
+        $this->logger->debug('Completing hook ' . $hookName . ' on ' . $page);
 
         $user = $this->userFactory->newFromUserIdentity($restorer->getUser());
         $page = $this->pageFactory->newFromTitle($page);
@@ -200,6 +207,6 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
             $this->formatMessage($reason),
         )->inContentLanguage()->plain();
 
-        $this->sendAlert($hookName, $msg, $restoredRev->getTimestamp());
+        $this->sendAlert($hookName, $msg, (int)wfTimestamp(TS_UNIX, $restoredRev->getTimestamp()));
     }
 }

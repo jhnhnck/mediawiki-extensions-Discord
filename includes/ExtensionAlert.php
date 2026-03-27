@@ -8,6 +8,7 @@ namespace MediaWiki\Extension\NovaDiscord;
 
 use MediaWiki\Context\RequestContext;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\Logger\Spi as LoggerSpi;
 use MediaWiki\RenameUser\Hook\RenameUserCompleteHook;
 use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Title\TitleFactory;
@@ -22,9 +23,10 @@ class ExtensionAlert extends DiscordAlert implements RenameUserCompleteHook {
                                 TitleFactory $titleFactory,
                                 UrlUtils $urlUtils,
                                 UserFactory $userFactory,
-                                NovaDiscordConfig $novaConfig) {
+                                NovaDiscordConfig $novaConfig,
+                                LoggerSpi $loggerSpi) {
         $this->userFactory = $userFactory;
-        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig);
+        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig, $loggerSpi);
     }
 
     /**

@@ -11,6 +11,7 @@ use MediaWiki\Hook\AfterImportPageHook;
 use MediaWiki\Hook\ArticleMergeCompleteHook;
 use MediaWiki\Hook\ArticleRevisionVisibilitySetHook;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\Logger\Spi as LoggerSpi;
 use MediaWiki\Page\Hook\ArticleProtectCompleteHook;
 use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Title\TitleFactory;
@@ -25,9 +26,10 @@ class ArticleAlert extends DiscordAlert implements ArticleRevisionVisibilitySetH
                                 TitleFactory $titleFactory,
                                 UrlUtils $urlUtils,
                                 UserFactory $userFactory,
-                                NovaDiscordConfig $novaConfig) {
+                                NovaDiscordConfig $novaConfig,
+                                LoggerSpi $loggerSpi) {
         $this->userFactory = $userFactory;
-        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig);
+        parent::__construct($httpFactory, $revLookup, $titleFactory, $urlUtils, $novaConfig, $loggerSpi);
     }
 
     /**

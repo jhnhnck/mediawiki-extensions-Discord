@@ -7,55 +7,80 @@
 namespace MediaWiki\Extension\NovaDiscord;
 
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\Logger\Spi as LoggerSpi;
 use MediaWiki\Revision\RevisionLookup;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\User;
 use MediaWiki\Utils\UrlUtils;
+use MediaWiki\Content\TextContent;
+use MediaWiki\Revision\SlotRecord;
+use Psr\Log\LoggerInterface;
+use Wikimedia\Diff\ComplexityException;
+use Wikimedia\Diff\Diff;
+use Wikimedia\Diff\DiffOpAdd;
+use Wikimedia\Diff\DiffOpChange;
+use Wikimedia\Diff\DiffOpDelete;
 
 abstract class DiscordAlert {
     private HttpRequestFactory $httpFactory;
     private RevisionLookup $revLookup;
     private TitleFactory $titleFactory;
     private UrlUtils $urlUtils;
+    protected LoggerInterface $logger;
     protected NovaDiscordConfig $novaConfig;
 
     public function __construct(HttpRequestFactory $httpFactory,
                                 RevisionLookup $revLookup,
                                 TitleFactory $titleFactory,
                                 UrlUtils $urlUtils,
-                                NovaDiscordConfig $novaConfig) {
+                                NovaDiscordConfig $novaConfig,
+                                LoggerSpi $loggerSpi) {
         $this->httpFactory = $httpFactory;
         $this->revLookup = $revLookup;
         $this->titleFactory = $titleFactory;
         $this->urlUtils = $urlUtils;
         $this->novaConfig = $novaConfig;
+        $this->logger = $loggerSpi->getLogger('nova-discord');
     }
 
     // handles sending a webhook to Discord
     protected function sendAlert(string $hookName, string $msg, int $timestamp): void {
-        wfDebugLog('nova-discord', 'Triggering discord webhook with ' . $hookName . ' and ' . $msg);
+        $this->logger->debug('Triggering discord webhook with ' . $hookName . ' and ' . $msg);
 
         $urls = $this->novaConfig->getWebhooksForHook($hookName);
         if ($urls === []) {
             return;
         }
 
-        $stripped = preg_replace('/\s+/', ' ', $msg);
+        // Normalize whitespace in the message header; preserve the diff block if present
+        $diffSep = "\n```diff\n";
+        if (($sepPos = strpos($msg, $diffSep)) !== false) {
+            $msg = preg_replace('/\s+/', ' ', trim(substr($msg, 0, $sepPos))) . substr($msg, $sepPos);
+        } else {
+            $msg = preg_replace('/\s+/', ' ', trim($msg));
+        }
 
         // webhook payload
         $json_data = [
-            'content' => "$stripped",
+            'content' => $msg,
             'allowed_mentions' => [
                 'parse' => []
             ]
         ];
 
+        try {
+            $postData = json_encode($json_data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        } catch (\JsonException $e) {
+            $this->logger->error('Failed to encode Discord payload for ' . $hookName . ': ' . $e->getMessage());
+            return;
+        }
+
         foreach ($urls as $hook) {
             $request = $this->httpFactory->create($hook, [
                 'method' => 'POST',
-                'postData' => json_encode($json_data),
+                'postData' => $postData,
             ], __METHOD__);
 
             // we don't care about if this succeeds, so no callback here
@@ -66,10 +91,7 @@ abstract class DiscordAlert {
 
     // checks if alert should be sent based on bot/namespace/user filters
     protected function isEnabled(string $hookName, ?int $namespace, User $user): bool {
-        // So this shows up in testing and not just when bots are disabled
-        if (!$user instanceof User) {
-            throw new InvalidArgumentException('$user must be of type User');
-        } elseif ($this->novaConfig->isNoBots() && $user->isBot()) {
+        if ($this->novaConfig->isNoBots() && $user->isBot()) {
             return false;
         }
 
@@ -84,6 +106,8 @@ abstract class DiscordAlert {
 
         return true;
     }
+
+    private const DIFF_BLOCK_BUDGET = 1500;
 
     /* --- Util Functions --- */
 
@@ -142,6 +166,7 @@ abstract class DiscordAlert {
             return '';
         }
 
+        $message = preg_replace('/\s+/', ' ', trim($message));
         $trimmed = $this->truncateString(addcslashes($message, $invalidChars), $this->novaConfig->getMaxChars());
 
         return '`' . $trimmed . '`';

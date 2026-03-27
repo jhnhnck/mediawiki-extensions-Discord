@@ -74,7 +74,8 @@
                 "UrlUtils",
                 "UserFactory",
                 "WikiPageFactory",
-                "NovaDiscord.Config"
+                "NovaDiscord.Config",
+                "NovaDiscord.LoggerSpi"
             ]
         },
         "UserAlert": {
@@ -85,7 +86,8 @@
                 "TitleFactory",
                 "UrlUtils",
                 "UserFactory",
-                "NovaDiscord.Config"
+                "NovaDiscord.Config",
+                "NovaDiscord.LoggerSpi"
             ]
         },
         "ArticleAlert": {
@@ -96,7 +98,8 @@
                 "TitleFactory",
                 "UrlUtils",
                 "UserFactory",
-                "NovaDiscord.Config"
+                "NovaDiscord.Config",
+                "NovaDiscord.LoggerSpi"
             ]
         },
         "FileAlert": {
@@ -107,7 +110,8 @@
                 "TitleFactory",
                 "UrlUtils",
                 "UserFactory",
-                "NovaDiscord.Config"
+                "NovaDiscord.Config",
+                "NovaDiscord.LoggerSpi"
             ]
         },
         "ExtensionAlert": {
@@ -118,7 +122,8 @@
                 "TitleFactory",
                 "UrlUtils",
                 "UserFactory",
-                "NovaDiscord.Config"
+                "NovaDiscord.Config",
+                "NovaDiscord.LoggerSpi"
             ]
         },
         "ErrorAlert": {
