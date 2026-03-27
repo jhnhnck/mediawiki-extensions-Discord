@@ -30,7 +30,7 @@ class ArticleProtectCompleteHookTest extends NovaDiscordIntegrationTestCase {
         $performerUserScored = str_replace(' ', '_', $performerUsername);
         $pageTitle = 'NovaTestProtect';
 
-        $expectedPayload = '{"content":"[' . $performerUsername . '](<https:\/\/novadiscord.local\/wiki\/User:' . $performerUserScored . '>) ([t](<https:\/\/novadiscord.local\/wiki\/User_talk:' . $performerUserScored . '>)|[c](<https:\/\/novadiscord.local\/wiki\/Special:Contributions\/' . $performerUserScored . '>)) changed protection of [' . $pageTitle . '](<https:\/\/novadiscord.local\/wiki\/' . $pageTitle . '>) `Test protection reason` (sysop, sysop)","allowed_mentions":{"parse":[]}}';
+        $expectedPayload = '{"content":"[' . $performerUsername . '](<https://novadiscord.local/wiki/User:' . $performerUserScored . '>) ([t](<https://novadiscord.local/wiki/User_talk:' . $performerUserScored . '>)|[c](<https://novadiscord.local/wiki/Special:Contributions/' . $performerUserScored . '>)) changed protection of [' . $pageTitle . '](<https://novadiscord.local/wiki/' . $pageTitle . '>) `Test protection reason` (sysop, sysop)","allowed_mentions":{"parse":[]}}';
 
         $payload = $this->mockHttpFactory->getCaptured()[0];
         $this->assertNotNull($payload, 'Webhook payload should be captured on article protect');

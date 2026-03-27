@@ -27,7 +27,7 @@ class LocalUserCreatedHookTest extends NovaDiscordIntegrationTestCase {
         // build expected payload
         $username = $user->getName();
         $userScored = str_replace(' ', '_', $username);
-        $expectedPayload = '{"content":"[' . $username . '](<https:\/\/novadiscord.local\/wiki\/User:' . $userScored . '>) ([t](<https:\/\/novadiscord.local\/wiki\/User_talk:' . $userScored . '>)|[c](<https:\/\/novadiscord.local\/wiki\/Special:Contributions\/' . $userScored . '>)) registered","allowed_mentions":{"parse":[]}}';
+        $expectedPayload = '{"content":"[' . $username . '](<https://novadiscord.local/wiki/User:' . $userScored . '>) ([t](<https://novadiscord.local/wiki/User_talk:' . $userScored . '>)|[c](<https://novadiscord.local/wiki/Special:Contributions/' . $userScored . '>)) registered","allowed_mentions":{"parse":[]}}';
 
         // verify webhook payload
         $captured = $this->mockHttpFactory->getCaptured();

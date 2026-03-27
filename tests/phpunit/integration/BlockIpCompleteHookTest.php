@@ -30,7 +30,7 @@ class BlockIpCompleteHookTest extends NovaDiscordIntegrationTestCase {
         $targetUsername = $targetUser->getName();
         $targetUserScored = str_replace(' ', '_', $targetUsername);
 
-        $expectedPayload = '{"content":"[' . $blockingUsername . '](<https:\/\/novadiscord.local\/wiki\/User:' . $blockingUserScored . '>) ([t](<https:\/\/novadiscord.local\/wiki\/User_talk:' . $blockingUserScored . '>)|[c](<https:\/\/novadiscord.local\/wiki\/Special:Contributions\/' . $blockingUserScored . '>)) blocked [' . $targetUsername . '](<https:\/\/novadiscord.local\/wiki\/User:' . $targetUserScored . '>) ([t](<https:\/\/novadiscord.local\/wiki\/User_talk:' . $targetUserScored . '>)|[c](<https:\/\/novadiscord.local\/wiki\/Special:Contributions\/' . $targetUserScored . '>)) `Test block reason` (infinity)","allowed_mentions":{"parse":[]}}';
+        $expectedPayload = '{"content":"[' . $blockingUsername . '](<https://novadiscord.local/wiki/User:' . $blockingUserScored . '>) ([t](<https://novadiscord.local/wiki/User_talk:' . $blockingUserScored . '>)|[c](<https://novadiscord.local/wiki/Special:Contributions/' . $blockingUserScored . '>)) blocked [' . $targetUsername . '](<https://novadiscord.local/wiki/User:' . $targetUserScored . '>) ([t](<https://novadiscord.local/wiki/User_talk:' . $targetUserScored . '>)|[c](<https://novadiscord.local/wiki/Special:Contributions/' . $targetUserScored . '>)) `Test block reason` (infinity)","allowed_mentions":{"parse":[]}}';
 
         $payload = $this->mockHttpFactory->getCaptured()[0];
         $this->assertNotNull($payload, 'Webhook payload should be captured on user block');

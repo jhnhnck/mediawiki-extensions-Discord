@@ -26,4 +26,4 @@ services:
             - NOVA_DB_PASSWORD=TestPasswordDoNotReuse
             - NOVA_SECRET_KEY=8b245fd370cb9005961385ea867f01dbc09ca2d970547e628b64683f7e544f53
             - NOVA_UPGRADE_KEY=oAk7YpgBGnv2k9m3fU
-            - NOVA_WEBHOOK_URL="https://example.webhook/api/36244f52-62fb-4d95-b964-3f8e288334c2"
+            - NOVA_WEBHOOK_URL=https://example.webhook/api/36244f52-62fb-4d95-b964-3f8e288334c2

@@ -7,6 +7,9 @@ cd "$APP_HOME/mediawiki"
 
 trap 'sleep 1' EXIT  # let stdout settle first
 
+local -a opt_all opt_stop
+zparseopts -D -E -- -all=opt_all -stop=opt_stop
+
 printf '%s\n' 'Initializing test environment...'
 
 PASS="$(LC_ALL=C tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c16)"
@@ -28,4 +31,11 @@ mv -fv LocalSettings.new LocalSettings.php
 
 printf '\n%s\n\n' '=== Starting Tests ==='
 
-composer phpunit:entrypoint -- extensions/NovaDiscord;
+local -a phpunit_args=("extensions/NovaDiscord")
+(( ${#opt_stop} )) && phpunit_args=("--stop-on-failure" "${phpunit_args[@]}")
+
+if (( ${#opt_all} )); then
+    composer phpunit:entrypoint -- "${phpunit_args[@]}" 2>&1
+else
+    { composer phpunit:entrypoint -- "${phpunit_args[@]}" 2>&1 } | grep -Evi 'DeferredUpdates|objectcache'
+fi

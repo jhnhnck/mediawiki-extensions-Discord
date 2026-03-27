@@ -9,7 +9,13 @@
 	},
 	"scripts": {
         "test": [
-            "docker compose --file .dev/docker-compose.yml up --build --abort-on-container-exit --exit-code-from job-tests --attach job-tests --remove-orphans"
+            "docker compose --file .dev/docker-compose.yml run --build --quiet-build --rm --remove-orphans job-tests"
+        ],
+        "test-all": [
+            "docker compose --file .dev/docker-compose.yml run --build --quiet-build --rm --remove-orphans job-tests zsh ./entry.zsh --all"
+        ],
+        "test-stop": [
+            "docker compose --file .dev/docker-compose.yml run --build --quiet-build --rm --remove-orphans job-tests zsh ./entry.zsh --stop"
         ],
 		"check": [
 			"parallel-lint . --exclude vendor --exclude node_modules",

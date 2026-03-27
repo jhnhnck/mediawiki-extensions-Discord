@@ -40,7 +40,7 @@ class UnblockUserCompleteHookTest extends NovaDiscordIntegrationTestCase {
         $targetUsername = $targetUser->getName();
         $targetUserScored = str_replace(' ', '_', $targetUsername);
 
-        $expectedPayload = '{"content":"[' . $unblockingUsername . '](<https:\/\/novadiscord.local\/wiki\/User:' . $unblockingUserScored . '>) ([t](<https:\/\/novadiscord.local\/wiki\/User_talk:' . $unblockingUserScored . '>)|[c](<https:\/\/novadiscord.local\/wiki\/Special:Contributions\/' . $unblockingUserScored . '>)) unblocked [' . $targetUsername . '](<https:\/\/novadiscord.local\/wiki\/User:' . $targetUserScored . '>) ([t](<https:\/\/novadiscord.local\/wiki\/User_talk:' . $targetUserScored . '>)|[c](<https:\/\/novadiscord.local\/wiki\/Special:Contributions\/' . $targetUserScored . '>))","allowed_mentions":{"parse":[]}}';
+        $expectedPayload = '{"content":"[' . $unblockingUsername . '](<https://novadiscord.local/wiki/User:' . $unblockingUserScored . '>) ([t](<https://novadiscord.local/wiki/User_talk:' . $unblockingUserScored . '>)|[c](<https://novadiscord.local/wiki/Special:Contributions/' . $unblockingUserScored . '>)) unblocked [' . $targetUsername . '](<https://novadiscord.local/wiki/User:' . $targetUserScored . '>) ([t](<https://novadiscord.local/wiki/User_talk:' . $targetUserScored . '>)|[c](<https://novadiscord.local/wiki/Special:Contributions/' . $targetUserScored . '>))","allowed_mentions":{"parse":[]}}';
 
         $payload = $this->mockHttpFactory->getCaptured()[0];
         $this->assertNotNull($payload, 'Webhook payload should be captured on user unblock');

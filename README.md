@@ -18,7 +18,7 @@ Live demo: <https://attuproject.org> ([Discord](https://links.attuproject.org/in
   - There is no guarantee of support for versions of MediaWiki that are considered end-of-life.
   - The `trunk` branch may contain changes that are only applicable to the cutting-edge alpha version of MediaWiki.
 
-*No extra dependencies are required*
+No extra dependencies are required. **APCu** is required if enabling `$wgDiscordPrivateExceptionAlerts` (used for rate limiting duplicate alerts).
 
 ## Installation
 
@@ -130,12 +130,14 @@ You can submit translations for this extension on [Translatewiki.net](https://tr
 Run with `composer test` or the following if you don't have composer installed. (Docker required)
 
 ```zsh
-docker compose --file .dev/docker-compose.yml up --build \
-    --abort-on-container-exit \
-    --exit-code-from job-tests \
-    --attach job-tests \
-    --remove-orphans
+docker compose --file .dev/docker-compose.yml run --build --quiet-build --rm --remove-orphans job-tests
 ```
+
+| Script | Description |
+| --- | --- |
+| `composer test` | Run tests, filtering noisy log output |
+| `composer test-all` | Run tests with unfiltered output (`--all`) |
+| `composer test-stop` | Run tests, stopping on first defect (`--stop`) |
 
 ### Test Coverage
 
