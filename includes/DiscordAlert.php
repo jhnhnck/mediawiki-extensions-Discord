@@ -199,4 +199,77 @@ abstract class DiscordAlert {
 
         return wfMessage('discord-revisionlinks', $diff, $minor, $sizeText)->inContentLanguage()->text();
     }
+
+    /**
+     * Computes a diff block string for the given revision vs its parent.
+     * Returns a markdown ```diff code block, truncated to DIFF_BLOCK_BUDGET chars.
+     * Returns null if content is not text-based.
+     */
+    protected function getDiffBlock(RevisionRecord $revision): ?string {
+        $newContent = $revision->getContent(SlotRecord::MAIN);
+        if (!($newContent instanceof TextContent)) {
+            return null;
+        }
+        $newText = mb_convert_encoding($newContent->getText(), 'UTF-8', 'UTF-8');
+
+        $parentId = $revision->getParentId();
+        if ($parentId) {
+            $parent = $this->revLookup->getPreviousRevision($revision);
+            $oldContent = $parent ? $parent->getContent(SlotRecord::MAIN) : null;
+            $oldText = ($oldContent instanceof TextContent)
+                ? mb_convert_encoding($oldContent->getText(), 'UTF-8', 'UTF-8')
+                : '';
+        } else {
+            // Page creation — show new content as additions (first N lines)
+            $oldText = '';
+        }
+
+        $oldLines = explode("\n", $oldText);
+        $newLines = explode("\n", $newText);
+
+        try {
+            $diff = new Diff($oldLines, $newLines);
+        } catch (ComplexityException $e) {
+            return null;
+        }
+
+        $lines = [];
+        $budget = self::DIFF_BLOCK_BUDGET;
+        $truncated = false;
+
+        foreach ($diff->edits as $op) {
+            if ($op instanceof DiffOpDelete || $op instanceof DiffOpChange) {
+                foreach ($op->orig as $line) {
+                    $entry = '- ' . $line;
+                    if (mb_strlen($entry) + 1 > $budget) {
+                        $truncated = true;
+                        break 2;
+                    }
+                    $lines[] = $entry;
+                    $budget -= mb_strlen($entry) + 1;
+                }
+            }
+            if ($op instanceof DiffOpAdd || $op instanceof DiffOpChange) {
+                foreach ($op->closing as $line) {
+                    $entry = '+ ' . $line;
+                    if (mb_strlen($entry) + 1 > $budget) {
+                        $truncated = true;
+                        break 2;
+                    }
+                    $lines[] = $entry;
+                    $budget -= mb_strlen($entry) + 1;
+                }
+            }
+        }
+
+        if ($lines === []) {
+            return null;
+        }
+
+        if ($truncated) {
+            $lines[] = '// ... (diff truncated)';
+        }
+
+        return "```diff\n" . implode("\n", $lines) . "\n```";
+    }
 }
