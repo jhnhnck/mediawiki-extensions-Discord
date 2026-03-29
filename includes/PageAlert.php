@@ -90,9 +90,11 @@ class PageAlert extends DiscordAlert implements PageSaveCompleteHook, PageDelete
             $this->formatMessage($summary),
         )->inContentLanguage()->plain();
 
-        $diffBlock = $this->getDiffBlock($revision);
-        if ($diffBlock !== null) {
-            $msg .= "\n" . $diffBlock;
+        if (!$revision->isMinor()) {
+            $diffBlock = $this->getDiffBlock($revision);
+            if ($diffBlock !== null) {
+                $msg .= "\n" . $diffBlock;
+            }
         }
 
         $this->sendAlert($hookName, $msg, (int)wfTimestamp(TS_UNIX, $revision->getTimestamp()));
