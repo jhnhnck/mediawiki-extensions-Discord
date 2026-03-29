@@ -59,7 +59,7 @@ class PageSaveCompleteHookTest extends NovaDiscordIntegrationTestCase {
         // build expected payload — no diff block
         $username = $user->getUser()->getName();
         $userScored = str_replace(' ', '_', $username);
-        $expectedPayload = '{"content":"[' . $username . '](<https://novadiscord.local/wiki/User:' . $userScored . '>) ([t](<https://novadiscord.local/wiki/User_talk:' . $userScored . '>)|[c](<https://novadiscord.local/wiki/Special:Contributions/' . $userScored . '>)) edited [NovaTestPageMinor](<https://novadiscord.local/wiki/NovaTestPageMinor>) ([diff](<https://novadiscord.local/index.php?title=NovaTestPageMinor&diff=prev&oldid=2>)) m (+14) `Fixed typo`","allowed_mentions":{"parse":[]}}';
+        $expectedPayload = '{"content":"[' . $username . '](<https://novadiscord.local/wiki/User:' . $userScored . '>) ([t](<https://novadiscord.local/wiki/User_talk:' . $userScored . '>)|[c](<https://novadiscord.local/wiki/Special:Contributions/' . $userScored . '>)) edited [NovaTestPageMinor](<https://novadiscord.local/wiki/NovaTestPageMinor>) ([diff](<https://novadiscord.local/index.php?title=NovaTestPageMinor&diff=prev&oldid=2>)) (m) (+12) `Fixed typo`","allowed_mentions":{"parse":[]}}';
 
         // verify webhook payload
         $payload = $this->mockHttpFactory->getCaptured()[0];
