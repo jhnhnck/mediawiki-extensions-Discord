@@ -6,6 +6,9 @@
 
 namespace MediaWiki\Extension\NovaDiscord\Tests\Integration;
 
+use MediaWiki\Content\WikitextContent;
+use MediaWiki\Revision\SlotRecord;
+
 /**
  * @group Database
  * @covers MediaWiki\Extension\NovaDiscord\PageAlert::onPageSaveComplete
@@ -40,16 +43,18 @@ class PageSaveCompleteHookTest extends NovaDiscordIntegrationTestCase {
         $this->assertTrue($status->isOK(), 'Page should be created successfully');
         $this->mockHttpFactory->reset();
 
-        // perform minor edit
+        // perform minor edit using WikiPage directly to pass EDIT_MINOR flag
         $user = $this->getTestUser();
-        $status = $this->editPage(
-            'NovaTestPageMinor',
-            'Initial content. (minor fix)',
-            'Fixed typo',
-            EDIT_MINOR,
-            $user->getAuthority()
+        $services = $this->getServiceContainer();
+        $title = $services->getTitleFactory()->newFromText('NovaTestPageMinor');
+        $page = $services->getWikiPageFactory()->newFromTitle($title);
+        $updater = $page->newPageUpdater($user->getAuthority());
+        $updater->setContent(SlotRecord::MAIN, new WikitextContent('Initial content. (minor fix)'));
+        $updater->saveRevision(
+            \MediaWiki\CommentStore\CommentStoreComment::newUnsavedComment('Fixed typo'),
+            EDIT_MINOR
         );
-        $this->assertTrue($status->isOK(), 'Page should be edited successfully');
+        $this->assertTrue($updater->getStatus()->isOK(), 'Page should be edited successfully');
 
         // build expected payload — no diff block
         $username = $user->getUser()->getName();
