@@ -49,6 +49,10 @@
         "DiscordPrivateExceptionAlerts": {
             "value": false,
             "description": "If true, unhandled PHP exceptions are posted to the webhook. Rate-limited per exception fingerprint. Opt-in only."
+        },
+        "DiscordExceptionDenyList": {
+            "value": [],
+            "description": "Patterns suppressing exception alerts. Each entry is either a class name string (suppresses all instances of that class) or an associative array with 'class' (required, fully-qualified) and optional 'messageContains' (case-sensitive substring). Suppressed exceptions still flow through MediaWiki's normal exception logging."
         }
     },
     "ServiceWiringFiles": [

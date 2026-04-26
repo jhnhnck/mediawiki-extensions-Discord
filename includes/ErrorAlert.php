@@ -53,6 +53,23 @@ class ErrorAlert extends DiscordAlert implements LogExceptionHook {
             }
         }
 
+        // skip exceptions matching the configured deny-list
+        foreach ($this->novaConfig->getExceptionDenyList() as $entry) {
+            if (is_string($entry)) {
+                $class = $entry;
+                $needle = null;
+            } else {
+                $class = $entry['class'] ?? null;
+                $needle = $entry['messageContains'] ?? null;
+            }
+            if ($class === null || !($e instanceof $class)) {
+                continue;
+            }
+            if ($needle === null || str_contains($e->getMessage(), $needle)) {
+                return;
+            }
+        }
+
         // opt-in only; disabled by default
         if (!$this->novaConfig->isPrivateExceptionAlertsEnabled()) {
             return;

@@ -19,6 +19,7 @@ class NovaDiscordConfig {
         'DiscordDisabledNS',
         'DiscordDisabledUsers',
         'DiscordPrivateExceptionAlerts',
+        'DiscordExceptionDenyList',
     ];
 
     private ServiceOptions $options;
@@ -86,5 +87,9 @@ class NovaDiscordConfig {
 
     public function isPrivateExceptionAlertsEnabled(): bool {
         return (bool)$this->options->get('DiscordPrivateExceptionAlerts');
+    }
+
+    public function getExceptionDenyList(): array {
+        return (array)$this->options->get('DiscordExceptionDenyList');
     }
 }
