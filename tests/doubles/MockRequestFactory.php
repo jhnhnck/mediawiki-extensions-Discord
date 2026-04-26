@@ -53,7 +53,7 @@ class MockRequest {
 
     /**
      * Execute the fake request; append a record to the sink.
-     * @return object
+     * Returns an object that quacks like a MediaWiki StatusValue.
      */
     public function execute() {
         $this->sink[] = [
@@ -64,7 +64,17 @@ class MockRequest {
             'caller' => $this->caller,
             'ts' => microtime(true),
         ];
-        return (object)[ 'status' => 200 ];
+        return new class {
+            public function isOK(): bool { return true; }
+        };
+    }
+
+    public function getStatus(): int {
+        return 200;
+    }
+
+    public function getContent(): string {
+        return '';
     }
 
     public function getHeaders(): array {

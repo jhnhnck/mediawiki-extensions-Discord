@@ -45,6 +45,9 @@ abstract class DiscordAlert {
         $this->logger = $loggerSpi->getLogger('nova-discord');
     }
 
+    // Discord rejects messages whose content exceeds 2000 characters
+    private const DISCORD_MAX_MESSAGE = 2000;
+
     // handles sending a webhook to Discord
     protected function sendAlert(string $hookName, string $msg, int $timestamp): void {
         $this->logger->debug('Triggering discord webhook with ' . $hookName . ' and ' . $msg);
@@ -60,6 +63,15 @@ abstract class DiscordAlert {
             $msg = preg_replace('/\s+/', ' ', trim(substr($msg, 0, $sepPos))) . substr($msg, $sepPos);
         } else {
             $msg = preg_replace('/\s+/', ' ', trim($msg));
+        }
+
+        // Discord drops the message if content is too long; truncate so it still sends
+        if (mb_strlen($msg) > self::DISCORD_MAX_MESSAGE) {
+            $this->logger->warning(
+                'Discord message for ' . $hookName . ' exceeds limit ('
+                . mb_strlen($msg) . ' > ' . self::DISCORD_MAX_MESSAGE . '); truncating'
+            );
+            $msg = self::truncateForDiscord($msg, self::DISCORD_MAX_MESSAGE);
         }
 
         // webhook payload
@@ -82,11 +94,42 @@ abstract class DiscordAlert {
                 'method' => 'POST',
                 'postData' => $postData,
             ], __METHOD__);
-
-            // we don't care about if this succeeds, so no callback here
             $request->setHeader('Content-Type', 'application/json');
-            $request->execute();
+
+            // route transport / Discord-side errors to the nova-discord log channel.
+            // safe from feedback loops: $logger->error() does not throw, so it does
+            // not trigger the LogException hook. ErrorAlert injects a NullLogger,
+            // so its own send failures stay quiet by design.
+            $status = $request->execute();
+            if (!$status->isOK()) {
+                $body = self::truncateString((string)$request->getContent(), 200);
+                $this->logger->error(
+                    'Discord webhook failed for ' . $hookName
+                    . ' (HTTP ' . $request->getStatus() . '): ' . $body
+                );
+            }
         }
+    }
+
+    // truncates a message to fit Discord's content limit, preserving the diff
+    // code fence so the message still renders cleanly when cut inside a diff block
+    private static function truncateForDiscord(string $msg, int $limit): string {
+        if (mb_strlen($msg) <= $limit) {
+            return $msg;
+        }
+
+        $diffSep = "\n```diff\n";
+        $closeFence = "\n```";
+        $marker = "\n// ... (truncated)";
+        $sepPos = mb_strpos($msg, $diffSep);
+
+        // no fence, or the cut would land before it: plain ellipsis truncate
+        if ($sepPos === false || $sepPos >= $limit - mb_strlen($diffSep)) {
+            return mb_substr($msg, 0, $limit - 3) . '...';
+        }
+
+        $reserveTail = mb_strlen($marker) + mb_strlen($closeFence);
+        return mb_substr($msg, 0, $limit - $reserveTail) . $marker . $closeFence;
     }
 
     // checks if alert should be sent based on bot/namespace/user filters
